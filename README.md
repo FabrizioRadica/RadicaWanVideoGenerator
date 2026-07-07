@@ -1183,4 +1183,7 @@ Concept & Design: Fabrizio Radica
 Project by RadicaDesign
 ```
 
+## Please Donate
+https://www.paypal.com/donate/?hosted_button_id=TTBHUJ7CFE78N
+
 Built on the shoulders of [Wan 2.2](https://github.com/Wan-Video/Wan2.2), [Hugging Face diffusers](https://github.com/huggingface/diffusers), FastAPI, PyTorch and ffmpeg.
