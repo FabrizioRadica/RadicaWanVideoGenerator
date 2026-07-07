@@ -567,6 +567,23 @@ workflows/           exported ComfyUI workflows
 
 ---
 
+## Warning
+
+Warning: this project is provided as is, without any warranty regarding functionality, stability, compatibility, or safety on your system.
+
+I do not accept any responsibility, in any way, for any damage, malfunction, instability, data loss, crashes, overheating, melting, or even partial failure of GPUs, CPUs, power supplies, motherboards, drives, RAM, or any other hardware component, past, present, or future.
+
+Installation, configuration, and execution of this project are entirely at your own risk and under your full responsibility.
+
+Use it as you see fit, according to your technical skills and the limits of your hardware.
+
+By downloading, installing, or running this project, you declare that you have read, understood, and fully accepted this disclaimer.
+
+For a few selected cases, depending on my availability, I may offer direct support for installation and initial configuration.
+
+
+---
+
 ## Credits
 
 ```text
@@ -576,3 +593,5 @@ Project by RadicaDesign
 ```
 
 Built on the shoulders of [Wan 2.2](https://github.com/Wan-Video/Wan2.2) (Alibaba), [Hugging Face diffusers](https://github.com/huggingface/diffusers), FastAPI and PyTorch.
+
+
