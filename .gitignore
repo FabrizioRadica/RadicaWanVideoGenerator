@@ -7,8 +7,6 @@ __pycache__/
 *.so
 
 #project
-models/
-
 
 # Distribution / packaging
 .Python
