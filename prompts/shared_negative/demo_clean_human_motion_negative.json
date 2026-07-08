@@ -1,0 +1,16 @@
+{
+  "schema_version": "shared_negative_prompt/1",
+  "id": "990e2f3eb30b4f809caee2a56610b408",
+  "type": "shared_negative_prompt",
+  "name": "Clean Human Motion Negative",
+  "negative_prompt": "bad anatomy, deformed body, distorted limbs, broken legs, extra limbs, missing fingers, malformed hands, twisted feet, unnatural walking, sliding feet, floating body, unstable body, body jitter, face distortion, changing face, melting face, asymmetrical face, crossed eyes, bad eyes, blinking artifacts, unnatural smile, plastic skin, doll face, uncanny valley, low quality, blurry, noisy, pixelated, temporal inconsistency, identity drift, camera jump, text, watermark, logo.",
+  "tags": [
+    "motion",
+    "human",
+    "anti-deformation"
+  ],
+  "created_at": "2026-07-08T15:07:42.940940+00:00",
+  "updated_at": "2026-07-08T15:07:42.940940+00:00",
+  "source": "demo",
+  "notes": ""
+}

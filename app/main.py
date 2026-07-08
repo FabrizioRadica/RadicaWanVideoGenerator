@@ -24,6 +24,7 @@ from app.routes import (
     library_routes,
     model_routes,
     project_routes,
+    prompt_library_routes,
     sequence_routes,
     settings_routes,
     workflow_routes,
@@ -33,6 +34,11 @@ from app.routes import (
 @asynccontextmanager
 async def lifespan(_app: FastAPI):
     settings.ensure_directories()
+    try:
+        from app.services import prompt_library_service
+        prompt_library_service.ensure_ready()
+    except Exception as exc:  # noqa: BLE001 — library seeding must never block startup
+        logger.warning("Prompt library init skipped: %s", exc)
     logger.info("%s v%s starting (%s) — %s", settings.app_name, settings.app_version,
                 settings.app_env, settings.credits_line)
     logger.info("Configuration loaded (env file found: %s), backend: %s",
@@ -63,6 +69,7 @@ app.include_router(audio_routes.router)
 app.include_router(video_effects_routes.router)
 app.include_router(settings_routes.router)
 app.include_router(ai_assistant_routes.router)
+app.include_router(prompt_library_routes.router)
 
 
 @app.exception_handler(Exception)

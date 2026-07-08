@@ -347,7 +347,16 @@ window.WVGAIAssistant = (function () {
       "ai-sc-apply-neg": function () { applyToClip("negative"); },
       "ai-sc-apply-both": function () { applyToClip("both"); },
       "ai-sc-copy": copySingle,
+      "ai-sc-savelib": function () {
+        if (window.WVGPromptLibrary && S.scResult) {
+          WVGPromptLibrary.saveAISingleClip({ positive_prompt: el("ai-sc-positive").value, negative_prompt: el("ai-sc-negative").value });
+        }
+      },
       "ai-seq-generate": generateSequence,
+      "ai-seq-savelib": function () {
+        syncPlanFromDom();
+        if (window.WVGPromptLibrary && S.plan) WVGPromptLibrary.saveAIPlan(S.plan);
+      },
       "ai-seq-add": addToQueue,
     };
     Object.keys(map).forEach(function (id) {

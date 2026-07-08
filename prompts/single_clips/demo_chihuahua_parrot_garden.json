@@ -1,0 +1,22 @@
+{
+  "schema_version": "single_clip_prompt/1",
+  "id": "c5c47b6ed8354e3b92696e184e0a9023",
+  "type": "single_clip_prompt",
+  "name": "Chihuahua and Parrot Microfilm",
+  "positive_prompt": "A heartwarming cinematic shot of a small fluffy chihuahua playing gently in a sun-drenched garden while a colorful parrot watches from a nearby railing. Warm golden hour lighting, lush green plants, shallow depth of field, soft camera movement, peaceful and charming mood.",
+  "negative_prompt": "bad animal anatomy, deformed dog, deformed bird, extra legs, extra wings, distorted face, unstable motion, floating body, unnatural movement, flickering feathers, identity drift, warped background, low quality, blurry, noisy, pixelated, text, watermark, logo, frame.",
+  "tags": [
+    "animals",
+    "garden",
+    "cinematic"
+  ],
+  "mode": "text2video",
+  "model_hint": "",
+  "generation_settings": {},
+  "color_look": {},
+  "project_relative_image": null,
+  "created_at": "2026-07-08T15:07:42.927958+00:00",
+  "updated_at": "2026-07-08T15:07:42.927958+00:00",
+  "source": "demo",
+  "notes": ""
+}
