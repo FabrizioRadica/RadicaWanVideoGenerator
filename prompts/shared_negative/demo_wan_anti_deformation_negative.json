@@ -1,0 +1,15 @@
+{
+  "schema_version": "shared_negative_prompt/1",
+  "id": "ebfcc19ff25143ca9df6e0e4d5d2aaee",
+  "type": "shared_negative_prompt",
+  "name": "WAN Anti-Deformation Negative",
+  "negative_prompt": "deformed body, distorted limbs, broken anatomy, unstable motion, unnatural movement, frame jitter, temporal inconsistency, flickering, identity drift, changing face, warped background, duplicated subject, ghosting, melting details, broken hands, extra fingers, extra legs, sliding feet, floating body, low quality, blurry, noisy, pixelated, compression artifacts, text, watermark, logo.",
+  "tags": [
+    "wan",
+    "anti-deformation"
+  ],
+  "created_at": "2026-07-08T15:07:42.942506+00:00",
+  "updated_at": "2026-07-08T15:07:42.942506+00:00",
+  "source": "demo",
+  "notes": ""
+}

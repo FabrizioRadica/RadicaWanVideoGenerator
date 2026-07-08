@@ -1,0 +1,22 @@
+{
+  "schema_version": "single_clip_prompt/1",
+  "id": "4d7b340bae424f22801aba2e5db2fce4",
+  "type": "single_clip_prompt",
+  "name": "Fantasy Dungeon Hero",
+  "positive_prompt": "A cinematic fantasy dungeon scene viewed from a slightly elevated angle. A brave hero with a sword walks through an ancient stone corridor lit by torches, soft smoke in the air, warm firelight, dark atmospheric shadows, dramatic adventure mood, detailed medieval environment.",
+  "negative_prompt": "bad anatomy, distorted sword, broken arms, extra limbs, malformed hands, unstable walking, sliding feet, warped dungeon walls, flickering torch artifacts, unreadable motion, low quality, blurry, noisy, pixelated, text, watermark, logo, frame, cartoonish distortion.",
+  "tags": [
+    "fantasy",
+    "dungeon",
+    "hero"
+  ],
+  "mode": "text2video",
+  "model_hint": "",
+  "generation_settings": {},
+  "color_look": {},
+  "project_relative_image": null,
+  "created_at": "2026-07-08T15:07:42.926958+00:00",
+  "updated_at": "2026-07-08T15:07:42.926958+00:00",
+  "source": "demo",
+  "notes": ""
+}

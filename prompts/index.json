@@ -1,0 +1,165 @@
+{
+  "schema_version": "prompt_library_index/1",
+  "updated_at": "2026-07-08T15:14:45.843530+00:00",
+  "items": [
+    {
+      "id": "ab5841d4e918437e9448985d7c8f4eae",
+      "type": "single_clip_prompt",
+      "name": "Beach Sunset Model",
+      "path": "prompts/single_clips/demo_beach_sunset_model.json",
+      "tags": [
+        "beach",
+        "sunset",
+        "cinematic"
+      ],
+      "source": "demo",
+      "updated_at": "2026-07-08T15:07:42.922440+00:00",
+      "preview": "A cinematic realistic video of an elegant woman walking slowly on the shoreline at sunset. Warm orange and pink sky, soft reflections on the wet sand, gentle sea waves, subtle wind moving her hair and",
+      "trashed": false
+    },
+    {
+      "id": "c5c47b6ed8354e3b92696e184e0a9023",
+      "type": "single_clip_prompt",
+      "name": "Chihuahua and Parrot Microfilm",
+      "path": "prompts/single_clips/demo_chihuahua_parrot_garden.json",
+      "tags": [
+        "animals",
+        "garden",
+        "cinematic"
+      ],
+      "source": "demo",
+      "updated_at": "2026-07-08T15:07:42.927958+00:00",
+      "preview": "A heartwarming cinematic shot of a small fluffy chihuahua playing gently in a sun-drenched garden while a colorful parrot watches from a nearby railing. Warm golden hour lighting, lush green plants, s",
+      "trashed": false
+    },
+    {
+      "id": "4c59b1cbdc8542508c59ae74dd950ef6",
+      "type": "single_clip_prompt",
+      "name": "Cyberpunk Alley Chase",
+      "path": "prompts/single_clips/demo_cyberpunk_alley_chase.json",
+      "tags": [
+        "cyberpunk",
+        "chase",
+        "neon"
+      ],
+      "source": "demo",
+      "updated_at": "2026-07-08T15:07:42.923441+00:00",
+      "preview": "A cinematic cyberpunk night scene in a narrow neon-lit alley. A young rebel wearing a red jacket runs through wet streets, reflections of purple and blue signs on the asphalt, dramatic handheld camera",
+      "trashed": false
+    },
+    {
+      "id": "4d7b340bae424f22801aba2e5db2fce4",
+      "type": "single_clip_prompt",
+      "name": "Fantasy Dungeon Hero",
+      "path": "prompts/single_clips/demo_fantasy_dungeon_hero.json",
+      "tags": [
+        "fantasy",
+        "dungeon",
+        "hero"
+      ],
+      "source": "demo",
+      "updated_at": "2026-07-08T15:07:42.926958+00:00",
+      "preview": "A cinematic fantasy dungeon scene viewed from a slightly elevated angle. A brave hero with a sword walks through an ancient stone corridor lit by torches, soft smoke in the air, warm firelight, dark a",
+      "trashed": false
+    },
+    {
+      "id": "1c8bd40a1fd54a2498ad1afa99bdc22c",
+      "type": "single_clip_prompt",
+      "name": "Product Showcase",
+      "path": "prompts/single_clips/demo_product_showcase.json",
+      "tags": [
+        "product",
+        "advertising",
+        "studio"
+      ],
+      "source": "demo",
+      "updated_at": "2026-07-08T15:07:42.925957+00:00",
+      "preview": "A premium cinematic product showcase of a modern black wireless headphone resting on a matte table. Slow rotating camera movement, soft studio lighting, elegant reflections, shallow depth of field, cl",
+      "trashed": false
+    },
+    {
+      "id": "cc45f3f7f48e4fdc84f8e9b741eb1589",
+      "type": "sequence_preset",
+      "name": "Beach Sunset Model Sequence",
+      "path": "prompts/sequence_presets/demo_beach_sunset_model_sequence.json",
+      "tags": [],
+      "source": "demo",
+      "updated_at": "2026-07-08T15:07:42.923441+00:00",
+      "preview": "5 clips · A cinematic realistic video of an elegant woman walking slowly on the shoreline at sunset. Warm orange and pink sky, soft reflections on the wet sand, gentle sea waves, subtle wind moving he",
+      "trashed": false
+    },
+    {
+      "id": "452a72e0828c428b8437d96bda0c350f",
+      "type": "sequence_preset",
+      "name": "Chihuahua and Parrot Microfilm",
+      "path": "prompts/sequence_presets/demo_chihuahua_parrot_microfilm_sequence.json",
+      "tags": [],
+      "source": "demo",
+      "updated_at": "2026-07-08T15:07:42.931796+00:00",
+      "preview": "5 clips · A heartwarming cinematic shot of a small fluffy chihuahua playing gently in a sun-drenched garden while a colorful parrot watches from a nearby railing. Warm golden hour lighting, lush green",
+      "trashed": false
+    },
+    {
+      "id": "22dd167299c3431b967dd23d8529f088",
+      "type": "sequence_preset",
+      "name": "Cyberpunk Alley Chase Sequence",
+      "path": "prompts/sequence_presets/demo_cyberpunk_alley_chase_sequence.json",
+      "tags": [],
+      "source": "demo",
+      "updated_at": "2026-07-08T15:07:42.924948+00:00",
+      "preview": "5 clips · A cinematic cyberpunk night scene in a narrow neon-lit alley. A young rebel wearing a red jacket runs through wet streets, reflections of purple and blue signs on the asphalt, dramatic handh",
+      "trashed": false
+    },
+    {
+      "id": "1570b397fe544b7bb04f52b4196d2ca6",
+      "type": "sequence_preset",
+      "name": "Fantasy Dungeon Hero Sequence",
+      "path": "prompts/sequence_presets/demo_fantasy_dungeon_hero_sequence.json",
+      "tags": [],
+      "source": "demo",
+      "updated_at": "2026-07-08T15:07:42.927958+00:00",
+      "preview": "5 clips · A cinematic fantasy dungeon scene viewed from a slightly elevated angle. A brave hero with a sword walks through an ancient stone corridor lit by torches, soft smoke in the air, warm firelig",
+      "trashed": false
+    },
+    {
+      "id": "788f7301c0f24908a8a0aa03a48293e9",
+      "type": "sequence_preset",
+      "name": "Product Showcase Sequence",
+      "path": "prompts/sequence_presets/demo_product_showcase_sequence.json",
+      "tags": [],
+      "source": "demo",
+      "updated_at": "2026-07-08T15:07:42.925957+00:00",
+      "preview": "5 clips · A premium cinematic product showcase of a modern black wireless headphone resting on a matte table. Slow rotating camera movement, soft studio lighting, elegant reflections, shallow depth of",
+      "trashed": false
+    },
+    {
+      "id": "990e2f3eb30b4f809caee2a56610b408",
+      "type": "shared_negative_prompt",
+      "name": "Clean Human Motion Negative",
+      "path": "prompts/shared_negative/demo_clean_human_motion_negative.json",
+      "tags": [
+        "motion",
+        "human",
+        "anti-deformation"
+      ],
+      "source": "demo",
+      "updated_at": "2026-07-08T15:07:42.940940+00:00",
+      "preview": "bad anatomy, deformed body, distorted limbs, broken legs, extra limbs, missing fingers, malformed hands, twisted feet, unnatural walking, sliding feet, floating body, unstable body, body jitter, face ",
+      "trashed": false
+    },
+    {
+      "id": "ebfcc19ff25143ca9df6e0e4d5d2aaee",
+      "type": "shared_negative_prompt",
+      "name": "WAN Anti-Deformation Negative",
+      "path": "prompts/shared_negative/demo_wan_anti_deformation_negative.json",
+      "tags": [
+        "wan",
+        "anti-deformation"
+      ],
+      "source": "demo",
+      "updated_at": "2026-07-08T15:07:42.942506+00:00",
+      "preview": "deformed body, distorted limbs, broken anatomy, unstable motion, unnatural movement, frame jitter, temporal inconsistency, flickering, identity drift, changing face, warped background, duplicated subj",
+      "trashed": false
+    }
+  ]
+}

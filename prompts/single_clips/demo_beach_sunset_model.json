@@ -1,0 +1,22 @@
+{
+  "schema_version": "single_clip_prompt/1",
+  "id": "ab5841d4e918437e9448985d7c8f4eae",
+  "type": "single_clip_prompt",
+  "name": "Beach Sunset Model",
+  "positive_prompt": "A cinematic realistic video of an elegant woman walking slowly on the shoreline at sunset. Warm orange and pink sky, soft reflections on the wet sand, gentle sea waves, subtle wind moving her hair and dress, shallow depth of field, smooth tracking shot, realistic skin texture, emotional peaceful mood.",
+  "negative_prompt": "bad anatomy, deformed body, distorted legs, broken legs, extra limbs, missing fingers, malformed hands, twisted feet, unnatural walking, sliding feet, floating body, unstable body, body jitter, face distortion, changing face, melting face, asymmetrical face, crossed eyes, bad eyes, blinking artifacts, unnatural smile, plastic skin, doll face, uncanny valley, low quality, blurry, noisy, pixelated, text, watermark, logo.",
+  "tags": [
+    "beach",
+    "sunset",
+    "cinematic"
+  ],
+  "mode": "text2video",
+  "model_hint": "",
+  "generation_settings": {},
+  "color_look": {},
+  "project_relative_image": null,
+  "created_at": "2026-07-08T15:07:42.922440+00:00",
+  "updated_at": "2026-07-08T15:07:42.922440+00:00",
+  "source": "demo",
+  "notes": ""
+}

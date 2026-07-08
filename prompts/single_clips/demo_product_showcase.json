@@ -1,0 +1,22 @@
+{
+  "schema_version": "single_clip_prompt/1",
+  "id": "1c8bd40a1fd54a2498ad1afa99bdc22c",
+  "type": "single_clip_prompt",
+  "name": "Product Showcase",
+  "positive_prompt": "A premium cinematic product showcase of a modern black wireless headphone resting on a matte table. Slow rotating camera movement, soft studio lighting, elegant reflections, shallow depth of field, clean background, luxury advertising style, high detail, realistic materials.",
+  "negative_prompt": "deformed product, warped geometry, melting plastic, unstable shape, incorrect reflections, noisy image, low quality, blurry edges, flickering, distorted logo, unwanted text, watermark, duplicated objects, unrealistic materials, broken symmetry, camera jump.",
+  "tags": [
+    "product",
+    "advertising",
+    "studio"
+  ],
+  "mode": "text2video",
+  "model_hint": "",
+  "generation_settings": {},
+  "color_look": {},
+  "project_relative_image": null,
+  "created_at": "2026-07-08T15:07:42.925957+00:00",
+  "updated_at": "2026-07-08T15:07:42.925957+00:00",
+  "source": "demo",
+  "notes": ""
+}

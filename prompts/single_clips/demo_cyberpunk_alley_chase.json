@@ -1,0 +1,22 @@
+{
+  "schema_version": "single_clip_prompt/1",
+  "id": "4c59b1cbdc8542508c59ae74dd950ef6",
+  "type": "single_clip_prompt",
+  "name": "Cyberpunk Alley Chase",
+  "positive_prompt": "A cinematic cyberpunk night scene in a narrow neon-lit alley. A young rebel wearing a red jacket runs through wet streets, reflections of purple and blue signs on the asphalt, dramatic handheld camera, fast but readable motion, rain particles, steam from vents, intense atmosphere, anime-inspired cinematic realism.",
+  "negative_prompt": "bad anatomy, distorted limbs, broken arms, extra legs, unstable running, sliding feet, warped perspective, unreadable motion, excessive blur, flickering lights, identity drift, face deformation, duplicated character, broken hands, low quality, noisy, pixelated, text, watermark, logo, frame.",
+  "tags": [
+    "cyberpunk",
+    "chase",
+    "neon"
+  ],
+  "mode": "text2video",
+  "model_hint": "",
+  "generation_settings": {},
+  "color_look": {},
+  "project_relative_image": null,
+  "created_at": "2026-07-08T15:07:42.923441+00:00",
+  "updated_at": "2026-07-08T15:07:42.923441+00:00",
+  "source": "demo",
+  "notes": ""
+}

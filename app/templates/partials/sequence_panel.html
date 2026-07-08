@@ -92,7 +92,11 @@
       <div class="panel-header">
         <h2>Video Sequence Queue</h2>
         <span class="hint" id="seq-status-badge"></span>
-        <button class="btn btn-sm" id="ai-open-sequence" type="button" style="display:none;" title="Plan a multi-clip sequence with the AI Assistant">✨ Sequence Assistant</button>
+        <div class="panel-header-actions">
+          <button class="btn btn-sm" id="ai-open-sequence" type="button" style="display:none;" title="Plan a multi-clip sequence with the AI Assistant">✨ Sequence Assistant</button>
+          <button class="btn btn-sm" id="pl-save-preset" type="button" title="Save the current queue as a Sequence Preset">💾 Save preset</button>
+          <button class="btn btn-sm" id="pl-open-sequence" type="button" title="Open the Prompt Library">📚 Library</button>
+        </div>
       </div>
 
       <div id="seq-queue-empty" class="empty-state" style="padding:30px 10px;">

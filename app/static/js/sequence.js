@@ -257,6 +257,7 @@ window.WVG = window.WVG || {};
         "<button class='btn btn-xs' data-act='look' data-clip='" + c.clip_id + "'>Look</button>" +
         "<button class='btn btn-xs' data-act='audio' data-clip='" + c.clip_id + "'>Audio</button>" +
         "<button class='btn btn-xs' data-act='dup' data-clip='" + c.clip_id + "'>Duplicate</button>" +
+        "<button class='btn btn-xs' data-act='savelib' data-clip='" + c.clip_id + "' title='Save this clip prompt to the Prompt Library'>⤓ Lib</button>" +
         "<button class='btn btn-xs' data-act='up' data-clip='" + c.clip_id + "'" + (i === 0 ? " disabled" : "") + ">↑</button>" +
         "<button class='btn btn-xs' data-act='down' data-clip='" + c.clip_id + "'" + (i === n - 1 ? " disabled" : "") + ">↓</button>" +
         "<button class='btn btn-xs' data-act='regen' data-clip='" + c.clip_id + "'>Regenerate</button>" +
@@ -275,6 +276,15 @@ window.WVG = window.WVG || {};
       if (act === "look") return openClipModal(clip, "clip-look");
       if (act === "audio") return openClipModal(clip, "clip-audio");
       if (act === "play") return playClipFinal(clip);
+      if (act === "savelib") {
+        var nm = window.prompt("Save this clip's prompt to the Prompt Library as:", clip.name || "Clip Prompt");
+        if (nm == null || !nm.trim()) return;
+        try {
+          await WVG.api("/api/prompt-library/from-clip/" + sid + "/" + clipId, { method: "POST", body: { name: nm.trim() } });
+          WVG.toast("Clip prompt saved to Prompt Library", "success");
+        } catch (e) { WVG.toast("Could not save clip prompt", "error", e.message); }
+        return;
+      }
       if (act === "del") {
         if (!confirm("Delete clip '" + clip.name + "'?")) return;
         await WVG.api("/api/sequences/" + sid + "/clips/" + clipId, { method: "DELETE" });
