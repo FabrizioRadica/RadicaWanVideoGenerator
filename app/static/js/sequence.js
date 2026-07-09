@@ -186,14 +186,36 @@ window.WVG = window.WVG || {};
   function renderGlobalGen() {
     var mod = ensureGlobalModule();
     if (mod) mod.hydrate(S.seq.global_generation_settings);
+    // Sequence Prompt Context: global positive (top-level) + global negative
+    // (stored in global_generation_settings.negative_prompt — one prompt system).
+    var pos = el("seq-g-positive");
+    if (pos) pos.value = S.seq.global_positive_prompt || "";
     var neg = el("seq-g-negative");
     if (neg) neg.value = S.seq.global_generation_settings.negative_prompt || "";
+    // Sequence Frame Continuity settings.
+    var fc = S.seq.frame_continuity || {};
+    var fcSave = el("seq-fc-save"), fcPrev = el("seq-fc-preview");
+    if (fcSave) fcSave.checked = fc.save_last_frame !== false;
+    if (fcPrev) fcPrev.checked = fc.show_preview_in_cards !== false;
   }
 
   function collectGlobalGen() {
     var g = S.gpGlobal ? S.gpGlobal.collect() : {};
     g.negative_prompt = (el("seq-g-negative") || {}).value || "";
     return g;
+  }
+
+  function collectFrameContinuity() {
+    var fcSave = el("seq-fc-save"), fcPrev = el("seq-fc-preview");
+    return {
+      save_last_frame: fcSave ? fcSave.checked : true,
+      show_preview_in_cards: fcPrev ? fcPrev.checked : true,
+    };
+  }
+
+  function showFramePreviews() {
+    var fc = (S.seq && S.seq.frame_continuity) || {};
+    return fc.show_preview_in_cards !== false;
   }
 
   var saveTimer = null;
@@ -207,8 +229,10 @@ window.WVG = window.WVG || {};
           output_mode: el("seq-output-mode").value,
           vram_mode: el("seq-vram-mode").value,
           continue_on_error: el("seq-continue-on-error").checked,
+          global_positive_prompt: (el("seq-g-positive") || {}).value || "",
           global_generation_settings: collectGlobalGen(),
           global_color_look: S.seq.global_color_look,
+          frame_continuity: collectFrameContinuity(),
         };
         S.seq = await WVG.api("/api/sequences/" + S.seq.sequence_id, { method: "PUT", body: body });
       } catch (e) { WVG.toast("Could not save sequence", "error", e.message); }
@@ -243,12 +267,18 @@ window.WVG = window.WVG || {};
     var err = c.last_error ? "<div class='small' style='color:var(--danger);'>" + esc(c.last_error) + "</div>" : "";
     var playBtn = (c.outputs && c.outputs.final)
       ? "<button class='btn btn-xs' data-act='play' data-clip='" + c.clip_id + "'>▶ Final</button>" : "";
+    // Continuity frame (SequenceFrameContinuityModule v1): thumb + status +
+    // Frame Tools button appear ONLY when a real saved frame exists.
+    var fcMod = window.WVGFrameContinuity;
+    var frameThumb = fcMod ? fcMod.thumbHTML(S.seq.sequence_id, c, showFramePreviews()) : "";
+    var frameStatus = fcMod ? fcMod.statusHTML(c) : "";
+    var frameBtn = fcMod ? fcMod.frameButtonHTML(c) : "";
     return "<div class='seq-clip-card'>" +
-      "<div class='seq-clip-head'>" + thumb +
+      "<div class='seq-clip-head'>" + thumb + frameThumb +
         "<div class='seq-clip-meta'>" +
           "<div class='seq-clip-title'>#" + (i + 1) + " " + esc(c.name) + " " + typeBadge + " " + badge + "</div>" +
           "<div class='small muted seq-clip-prompt'>" + esc((c.prompt || "").slice(0, 90) || "(no prompt)") + "</div>" +
-          "<div class='small muted'>" + esc(look) + " · " + esc(audio) + "</div>" +
+          "<div class='small muted'>" + esc(look) + " · " + esc(audio) + (frameStatus ? " · " + frameStatus : "") + "</div>" +
           err + prog +
         "</div>" +
       "</div>" +
@@ -263,7 +293,7 @@ window.WVG = window.WVG || {};
         "<button class='btn btn-xs' data-act='regen' data-clip='" + c.clip_id + "'>Regenerate</button>" +
         "<button class='btn btn-xs' data-act='resume' data-clip='" + c.clip_id + "'>Resume here</button>" +
         "<button class='btn btn-xs' data-act='skip' data-clip='" + c.clip_id + "'>Skip</button>" +
-        playBtn +
+        playBtn + frameBtn +
         "<button class='btn btn-xs btn-danger' data-act='del' data-clip='" + c.clip_id + "'>Delete</button>" +
       "</div></div>";
   }
@@ -276,6 +306,14 @@ window.WVG = window.WVG || {};
       if (act === "look") return openClipModal(clip, "clip-look");
       if (act === "audio") return openClipModal(clip, "clip-audio");
       if (act === "play") return playClipFinal(clip);
+      if (act === "frame") {
+        if (window.WVGFrameContinuity) {
+          WVGFrameContinuity.openTools(sid, clip, {
+            onCreated: function () { selectSequence(sid); },
+          });
+        }
+        return;
+      }
       if (act === "savelib") {
         var nm = window.prompt("Save this clip's prompt to the Prompt Library as:", clip.name || "Clip Prompt");
         if (nm == null || !nm.trim()) return;
@@ -521,7 +559,10 @@ window.WVG = window.WVG || {};
     if (!S.seq) return;
     (st.clips || []).forEach(function (cs) {
       var c = S.seq.clips.find(function (x) { return x.clip_id === cs.clip_id; });
-      if (c) { c.status = cs.status; c.progress = cs.progress; c.stage = cs.stage; c.last_error = cs.last_error; }
+      if (c) {
+        c.status = cs.status; c.progress = cs.progress; c.stage = cs.stage; c.last_error = cs.last_error;
+        if (cs.continuity_frame) c.continuity_frame = cs.continuity_frame;
+      }
     });
     S.seq.render_state = {
       status: st.status, overall_progress: st.overall_progress,
@@ -596,11 +637,21 @@ window.WVG = window.WVG || {};
     });
     el("seq-select").addEventListener("change", function () { selectSequence(el("seq-select").value); });
 
-    // Sequence orchestration fields + the global default negative prompt. The
-    // Global Generation Parameters module saves itself via its onChange handler.
+    // Sequence orchestration fields + the Sequence Prompt Context. The Global
+    // Generation Parameters module saves itself via its onChange handler.
     ["seq-name", "seq-output-mode", "seq-vram-mode", "seq-continue-on-error",
-     "seq-g-negative"].forEach(function (id) {
+     "seq-g-negative", "seq-g-positive"].forEach(function (id) {
       var e = el(id); if (e) e.addEventListener("change", saveSettings);
+    });
+
+    // Sequence Frame Continuity toggles: persist + immediately show/hide the
+    // last-frame previews in the clip cards.
+    ["seq-fc-save", "seq-fc-preview"].forEach(function (id) {
+      var e = el(id);
+      if (e) e.addEventListener("change", function () {
+        if (S.seq) { S.seq.frame_continuity = collectFrameContinuity(); renderClips(); }
+        saveSettings();
+      });
     });
 
     var useGlobal = el("clip-use-global");

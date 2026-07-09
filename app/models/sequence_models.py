@@ -16,7 +16,7 @@ from __future__ import annotations
 from datetime import datetime, timezone
 from enum import Enum
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 
 from app.models.project_models import AudioTrack, VideoEffects
 
@@ -118,6 +118,34 @@ class ClipGenerationOverrides(BaseModel):
     negative_prompt: str | None = None
 
 
+class ContinuityFrame(BaseModel):
+    """Metadata of a clip's extracted last frame (SequenceFrameContinuityModule v1).
+
+    `path` is always sequence-relative (assets/continuity_frames/<file>) — never
+    an absolute filesystem path. Older sequences without this field load with
+    available=False (pydantic default)."""
+    available: bool = False
+    frame_type: str = "last_frame"
+    path: str = ""
+    source_output: str = ""
+    created_at: str = ""
+
+
+class CreatedFromFrame(BaseModel):
+    """Traceability for clips created from a saved continuity frame."""
+    source_clip_id: str = ""
+    source_frame_path: str = ""
+    source_frame_type: str = "last_frame"
+    created_at: str = Field(default_factory=utc_now)
+
+
+class FrameContinuitySettings(BaseModel):
+    """Sequence Frame Continuity options (v1: extraction + card previews only).
+    This module never starts rendering and never auto-uses previous frames."""
+    save_last_frame: bool = True
+    show_preview_in_cards: bool = True
+
+
 class ClipOutputs(BaseModel):
     """Filenames (relative to the clip's own folder) of the rendered stages."""
     raw: str | None = None
@@ -147,6 +175,8 @@ class SequenceClip(BaseModel):
     stage: str = ""
     seed_used: int | None = None
     outputs: ClipOutputs = Field(default_factory=ClipOutputs)
+    continuity_frame: ContinuityFrame = Field(default_factory=ContinuityFrame)
+    created_from_frame: CreatedFromFrame | None = None
     diagnostics: dict | None = None
     last_error: str | None = None
     needs_regeneration_reason: str | None = None
@@ -189,9 +219,16 @@ class VideoSequence(BaseModel):
     created_at: str = Field(default_factory=utc_now)
     updated_at: str = Field(default_factory=utc_now)
 
+    # Sequence Prompt Context: the shared visual/narrative context of the whole
+    # sequence. The positive part lives here; the global NEGATIVE prompt reuses
+    # the existing global_generation_settings.negative_prompt field (one prompt
+    # system — no duplicate). Clip prompts are never overwritten by these.
+    global_positive_prompt: str = ""
+
     global_generation_settings: GlobalGenerationSettings = Field(default_factory=GlobalGenerationSettings)
     global_color_look: VideoEffects = Field(default_factory=VideoEffects)
     sequence_audio_tracks: list[AudioTrack] = Field(default_factory=list)
+    frame_continuity: FrameContinuitySettings = Field(default_factory=FrameContinuitySettings)
 
     output_mode: OutputMode = OutputMode.CLIPS_ONLY
     vram_mode: VramMode = VramMode.BALANCED
@@ -205,6 +242,24 @@ class VideoSequence(BaseModel):
     app_version: str = "1.0.0"
 
     model_config = {"populate_by_name": True}
+
+    @model_validator(mode="before")
+    @classmethod
+    def _migrate_prompt_context(cls, data):
+        """Backward compatibility: an older/external sequence.json may carry a
+        top-level `default_negative_prompt` (or `global_negative_prompt`). Load
+        it into the canonical global_generation_settings.negative_prompt without
+        touching clip prompts. Missing global_positive_prompt stays ''. """
+        if isinstance(data, dict):
+            legacy = data.pop("global_negative_prompt", None) or data.pop("default_negative_prompt", None)
+            if isinstance(legacy, str) and legacy.strip():
+                gs = data.get("global_generation_settings")
+                if not isinstance(gs, dict):
+                    gs = {}
+                    data["global_generation_settings"] = gs
+                if not (gs.get("negative_prompt") or "").strip():
+                    gs["negative_prompt"] = legacy.strip()
+        return data
 
     def reindex(self) -> None:
         for i, clip in enumerate(self.clips):

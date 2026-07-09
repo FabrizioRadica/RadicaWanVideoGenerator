@@ -179,7 +179,8 @@ class SequenceQueueManager:
                  "stage": c.stage, "last_error": c.last_error,
                  "needs_regeneration_reason": c.needs_regeneration_reason,
                  "has_raw": bool(c.outputs.raw), "has_fx": bool(c.outputs.fx),
-                 "has_final": bool(c.outputs.final)}
+                 "has_final": bool(c.outputs.final),
+                 "continuity_frame": c.continuity_frame.model_dump(mode="json")}
                 for c in seq.clips
             ],
             "outputs": seq.outputs.model_dump(mode="json"),
@@ -374,6 +375,22 @@ class SequenceQueueManager:
             "backend": backend.name,
             "is_mock": backend.is_mock,
         }
+        # --- Continuity frame (SequenceFrameContinuityModule v1) --------------
+        # Extract the REAL last frame of the completed clip when the sequence
+        # setting is enabled. Failure is a non-blocking warning — it never
+        # fails the completed clip (patch §7.3).
+        try:
+            from app.services import sequence_frame_continuity_service as sfc
+
+            t0 = time.time()
+            note = sfc.extract_for_completed_clip(seq, clip)
+            if note:
+                timings["continuity_frame_seconds"] = round(time.time() - t0, 2)
+                self._log(seq, f"Clip {clip.index + 1} {note}")
+        except Exception as exc:  # noqa: BLE001 — extraction must never fail the clip
+            self._log(seq, f"Clip {clip.index + 1} last-frame extraction failed "
+                           f"(clip kept): {exc}")
+
         self._write_clip_metadata(seq, clip)
         sequence_service.save_sequence(seq)
         self._log(seq, f"Clip {clip.index + 1} completed in {timings.get('render_seconds')}s "

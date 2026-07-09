@@ -199,6 +199,42 @@ async def api_skip_clip(sequence_id: str, clip_id: str):
         raise _err(exc)
 
 
+# ==========================================================================
+# Sequence Frame Continuity (SequenceFrameContinuityModule v1)
+# ==========================================================================
+@router.post("/api/sequences/{sequence_id}/clips/{clip_id}/continuity/extract-last-frame")
+async def api_extract_last_frame(sequence_id: str, clip_id: str):
+    """Manual (re-)extraction of a completed clip's last frame. The primary
+    extraction happens automatically after a successful render when the
+    sequence setting is enabled — this endpoint never renders anything."""
+    from app.services import sequence_frame_continuity_service as sfc
+
+    try:
+        clip = sfc.extract_now(sequence_id, clip_id)
+    except SequenceError as exc:
+        raise _err(exc)
+    except sfc.ContinuityError as exc:
+        raise HTTPException(status_code=400, detail=str(exc))
+    return clip.model_dump(mode="json")
+
+
+@router.post("/api/sequences/{sequence_id}/clips/{clip_id}/continuity/create-clip-from-frame")
+async def api_create_clip_from_frame(sequence_id: str, clip_id: str):
+    """Create a new Image Reference clip from the clip's saved last frame.
+    The new clip is inserted after the source clip, marked ready, and is
+    NEVER rendered automatically."""
+    from app.services import sequence_frame_continuity_service as sfc
+
+    try:
+        clip = sfc.create_clip_from_frame(sequence_id, clip_id)
+    except SequenceError as exc:
+        raise _err(exc)
+    except sfc.ContinuityError as exc:
+        status = 404 if "not found" in str(exc).lower() else 400
+        raise HTTPException(status_code=status, detail=str(exc))
+    return clip.model_dump(mode="json")
+
+
 @router.post("/api/sequences/{sequence_id}/merge")
 async def api_merge(sequence_id: str):
     import threading
@@ -394,6 +430,23 @@ async def serve_sequence_image(sequence_id: str, filename: str):
     if not path.exists():
         raise HTTPException(status_code=404, detail="Image not found.")
     return FileResponse(path, media_type=media_service.content_type_for(path))
+
+
+@router.get("/media/sequences/{sequence_id}/continuity/{filename}")
+async def serve_continuity_frame(sequence_id: str, filename: str, download: bool = False):
+    """Serve a REGISTERED continuity frame image (PNG/JPG/WebP) from the
+    sequence's assets/continuity_frames folder — never arbitrary files."""
+    from app.services import sequence_frame_continuity_service as sfc
+
+    try:
+        path = sfc.resolve_continuity_frame_media(sequence_id, filename)
+    except SequenceError as exc:
+        raise _err(exc)
+    except sfc.ContinuityError as exc:
+        status = 404 if "not found" in str(exc).lower() else 400
+        raise HTTPException(status_code=status, detail=str(exc))
+    headers = {"Content-Disposition": f'attachment; filename="{path.name}"'} if download else None
+    return FileResponse(path, media_type=media_service.content_type_for(path), headers=headers)
 
 
 @router.get("/media/sequences/{sequence_id}/asset/audio/{filename}")

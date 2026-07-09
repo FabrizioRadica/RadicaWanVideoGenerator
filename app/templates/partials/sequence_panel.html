@@ -45,15 +45,38 @@
           <span>Continue on failed clip</span>
         </label>
 
+        <details class="collapsible" id="seq-prompt-context">
+          <summary>Sequence Prompt Context</summary>
+          <div class="field" style="margin-top:8px;">
+            <label class="field-label" for="seq-g-positive">Global positive prompt</label>
+            <textarea id="seq-g-positive" rows="2" placeholder="same subject, same environment, same color palette, same cinematic style, same mood, same lighting, same narrative continuity"></textarea>
+            <div class="small muted">The global positive prompt defines the shared visual and narrative context for the sequence. Clip prompts remain editable and are not overwritten.</div>
+          </div>
+          <div class="field">
+            <label class="field-label" for="seq-g-negative">Global negative prompt</label>
+            <textarea id="seq-g-negative" rows="2"></textarea>
+            <div class="small muted">The global negative prompt is used as the default negative prompt for sequence clips unless a clip provides its own negative prompt.</div>
+          </div>
+        </details>
+
+        <details class="collapsible" id="seq-frame-continuity">
+          <summary>Sequence Frame Continuity</summary>
+          <label class="toggle" style="margin:8px 0 6px;">
+            <input type="checkbox" id="seq-fc-save"><span class="track"></span>
+            <span>Save last frame after each completed clip</span>
+          </label>
+          <label class="toggle" style="margin-bottom:6px;">
+            <input type="checkbox" id="seq-fc-preview"><span class="track"></span>
+            <span>Show last-frame preview in clip cards</span>
+          </label>
+          <div class="small muted">Saved last frames can be reused later to create new Image Reference clips. This module never starts rendering automatically.</div>
+        </details>
+
         <details class="collapsible" id="seq-global-gen">
           <summary>Global Generation Parameters</summary>
           <div class="small muted" style="margin-bottom:8px;">The same Generation Parameters module used in Single Clip — applied to every clip unless a clip overrides it.</div>
           {% set gp_context = "sequence_global" %}
           {% include "partials/generation_parameters.html" %}
-          <div class="field" style="margin-top:10px;">
-            <label class="field-label" for="seq-g-negative">Default negative prompt</label>
-            <textarea id="seq-g-negative" rows="2"></textarea>
-          </div>
         </details>
 
         <details class="collapsible" id="seq-global-look">
@@ -138,6 +161,28 @@
     <div class="panel" id="seq-library-panel">
       <div class="panel-header"><h2>Sequences</h2></div>
       <div id="seq-library-list" class="seq-library-list"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Frame Tools (SequenceFrameContinuityModule v1) — shows only REAL saved
+     last frames; never a placeholder. Never starts rendering. -->
+<div class="modal-backdrop" id="frame-tools-backdrop">
+  <div class="modal" style="max-width:520px;">
+    <div class="modal-header">
+      <h2 id="frame-tools-title">Frame Tools</h2>
+      <button class="btn btn-icon" onclick="WVG.closeModal('frame-tools-backdrop')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="small muted" style="margin-bottom:8px;">Last frame extracted from this clip.</div>
+      <img id="frame-tools-image" alt="Saved last frame"
+           style="width:100%;border-radius:10px;background:#000;display:block;">
+      <div class="small muted" id="frame-tools-source" style="margin-top:6px;"></div>
+    </div>
+    <div class="modal-footer">
+      <a class="btn btn-sm" id="frame-tools-download" download>⬇ Download frame</a>
+      <button class="btn btn-primary" id="frame-tools-create">＋ Create new clip from this frame</button>
+      <button class="btn" onclick="WVG.closeModal('frame-tools-backdrop')">Close</button>
     </div>
   </div>
 </div>

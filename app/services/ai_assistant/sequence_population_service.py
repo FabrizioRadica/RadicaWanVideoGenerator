@@ -127,7 +127,11 @@ def populate(sequence_id: str, plan: SequencePlan, mode: str = "append") -> dict
         seq.clips.append(clip)
         added.append(clip.clip_id)
 
-    # Seed the sequence-level default negative prompt if the user hasn't set one.
+    # Seed the Sequence Prompt Context if the user hasn't set it: the plan's
+    # global style becomes the global positive prompt, the plan's global
+    # negative becomes the global negative prompt. Clip prompts are untouched.
+    if plan.global_style and not (seq.global_positive_prompt or "").strip():
+        seq.global_positive_prompt = plan.global_style.strip()
     if plan.global_negative_prompt and not seq.global_generation_settings.negative_prompt.strip():
         seq.global_generation_settings.negative_prompt = plan.global_negative_prompt.strip()
 

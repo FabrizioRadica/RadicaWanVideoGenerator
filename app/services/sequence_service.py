@@ -88,8 +88,8 @@ def assets_audio_dir(seq: VideoSequence) -> Path:
 
 def _ensure_layout(folder: str) -> None:
     base = sequence_dir(folder)
-    for sub in ("assets/images", "assets/audio", "source", "clips",
-                "exports/merged", "exports/final"):
+    for sub in ("assets/images", "assets/audio", "assets/continuity_frames",
+                "source", "clips", "exports/merged", "exports/final"):
         (base / sub).mkdir(parents=True, exist_ok=True)
 
 
@@ -249,7 +249,8 @@ def create_sequence(name: str, description: str = "", model_id: str = "") -> Vid
     return seq
 
 
-_SEQUENCE_TOP_FIELDS = ("name", "description", "output_mode", "vram_mode", "continue_on_error")
+_SEQUENCE_TOP_FIELDS = ("name", "description", "output_mode", "vram_mode", "continue_on_error",
+                        "global_positive_prompt")
 
 
 def update_sequence(sequence_id: str, changes: dict) -> VideoSequence:
@@ -260,6 +261,12 @@ def update_sequence(sequence_id: str, changes: dict) -> VideoSequence:
             data[key] = changes[key]
     if "global_generation_settings" in changes and isinstance(changes["global_generation_settings"], dict):
         data["global_generation_settings"].update(changes["global_generation_settings"])
+    # Sequence Prompt Context convenience key: the global negative prompt is
+    # stored in global_generation_settings.negative_prompt (one prompt system).
+    if "global_negative_prompt" in changes and isinstance(changes["global_negative_prompt"], str):
+        data["global_generation_settings"]["negative_prompt"] = changes["global_negative_prompt"]
+    if "frame_continuity" in changes and isinstance(changes["frame_continuity"], dict):
+        data.setdefault("frame_continuity", {}).update(changes["frame_continuity"])
     if "global_color_look" in changes and isinstance(changes["global_color_look"], dict):
         # Deep-merge nested effect groups so partial updates work like the
         # single-clip video_effects update.
