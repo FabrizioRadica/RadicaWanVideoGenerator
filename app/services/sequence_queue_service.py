@@ -200,12 +200,24 @@ class SequenceQueueManager:
             except Exception as exc:  # noqa: BLE001 — surface as a sequence failure
                 self._finish(sequence_id, SequenceStatus.FAILED, last_error=str(exc))
                 return
+            # patch ModularVideoBackendArchitecture §11 — the sequence-level video
+            # backend module. Refuse an unknown/unavailable backend before render.
+            from app.services import video_backends
+
+            try:
+                module = video_backends.require_available(
+                    getattr(seq, "backend_id", video_backends.DEFAULT_BACKEND_ID))
+            except video_backends.VideoBackendError as exc:
+                self._finish(sequence_id, SequenceStatus.FAILED, last_error=str(exc))
+                return
 
             seq.render_state.status = SequenceStatus.RENDERING
             seq.render_state.started_at = utc_now()
             seq.render_state.last_error = None
             seq.render_state.clips_total = len(seq.clips)
-            self._log(seq, f"Sequence '{seq.name}' render started — backend={backend.name}, "
+            self._log(seq, f"Sequence '{seq.name}' render started — "
+                           f"video_backend={module.display_name} ({module.backend_id}), "
+                           f"engine={backend.name}, "
                            f"output_mode={seq.output_mode.value}, vram_mode={seq.vram_mode.value}")
             # Mark targets queued.
             for c in seq.clips:
@@ -231,7 +243,7 @@ class SequenceQueueManager:
                     self._log(seq, f"Clip {clip.index + 1} already completed — kept")
                     continue
 
-                ok = self._render_one(seq, clip, backend, cancel)
+                ok = self._render_one(seq, clip, backend, module, cancel)
 
                 seq = sequence_service.load_sequence(sequence_id)
                 clip = seq.get_clip(order_clip.clip_id)
@@ -269,7 +281,7 @@ class SequenceQueueManager:
                 self._threads.pop(sequence_id, None)
 
     # -- one clip -----------------------------------------------------------
-    def _render_one(self, seq: VideoSequence, clip, backend, cancel: threading.Event) -> bool:
+    def _render_one(self, seq: VideoSequence, clip, backend, module, cancel: threading.Event) -> bool:
         from app.services.generation_service import GenerationCancelled
 
         base = project_service.sanitize_folder_name(seq.name)
@@ -310,8 +322,10 @@ class SequenceQueueManager:
                 sequence_service.save_sequence(seq)
 
         try:
-            result = backend.generate(project, seed, f"{stem}_raw", raw_dir, cdir, progress,
-                                      should_cancel=cancel.is_set)
+            # Generation goes through the selected video backend module, which
+            # delegates to the existing Wan engine (§3/§7). Wan behavior unchanged.
+            result = module.generate(project, seed, f"{stem}_raw", raw_dir, cdir, progress,
+                                     should_cancel=cancel.is_set)
         except GenerationCancelled:
             clip.status = ClipStatus.STOPPED
             clip.needs_regeneration_reason = "Stopped by user during rendering"
@@ -374,6 +388,9 @@ class SequenceQueueManager:
             "timings": timings,
             "backend": backend.name,
             "is_mock": backend.is_mock,
+            "requested_backend": module.backend_id,
+            "effective_backend": module.backend_id,
+            "backend_display_name": module.display_name,
         }
         # --- Continuity frame (SequenceFrameContinuityModule v1) --------------
         # Extract the REAL last frame of the completed clip when the sequence

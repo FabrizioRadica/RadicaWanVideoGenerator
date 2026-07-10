@@ -796,6 +796,14 @@ class JobManager:
         return sorted(jobs, key=lambda j: j.created_at, reverse=True)
 
     def _validate(self, project: Project, confirm_fallback: bool = False):
+        # patch ModularVideoBackendArchitecture §6 — refuse an unknown/unavailable
+        # video backend up front (never a fake or started-then-failed render).
+        from app.services import video_backends
+
+        try:
+            video_backends.require_available(getattr(project, "backend_id", video_backends.DEFAULT_BACKEND_ID))
+        except video_backends.VideoBackendError as exc:
+            raise GenerationError(str(exc)) from exc
         if not project.positive_prompt.strip():
             raise GenerationError("The positive prompt is empty. Write a prompt before generating.")
         if project.resolution.width % 8 or project.resolution.height % 8:
@@ -959,9 +967,16 @@ class JobManager:
                 self._set(job_id, progress=pct, stage=stage)
                 self._log(job_id, f"[{pct:3d}%] {stage}")
 
-            result = backend.generate(project, seed, stem, output_dir, preview_dir,
-                                      progress, should_cancel=should_cancel,
-                                      confirm_fallback=job.confirm_fallback)
+            # patch ModularVideoBackendArchitecture §3/§7 — generation is accessed
+            # through the selected video backend MODULE, which delegates to the
+            # existing Wan engine (`backend` above). Behavior is unchanged for Wan.
+            from app.services import video_backends
+
+            module = video_backends.get_backend(
+                getattr(project, "backend_id", video_backends.DEFAULT_BACKEND_ID))
+            result = module.generate(project, seed, stem, output_dir, preview_dir,
+                                     progress, should_cancel=should_cancel,
+                                     confirm_fallback=job.confirm_fallback)
             for note in result.preset_notes:
                 self._log(job_id, f"PRESET: {note}")
                 logger.info("Job %s preset: %s", job_id, note)
@@ -1051,6 +1066,9 @@ class JobManager:
                 sampler_backend=result.sampler_backend,
                 model_sampling=result.model_sampling,
                 vram_cleanup=vram_cleanup,
+                requested_backend=module.backend_id,
+                effective_backend=module.backend_id,
+                backend_display_name=module.display_name,
             )
             meta_name = metadata_service.write_video_metadata(pdir, result.output_path.name, metadata)
 

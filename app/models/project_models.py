@@ -5,12 +5,17 @@ from __future__ import annotations
 from datetime import datetime, timezone
 from typing import Any
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 
 from app.models.camera_motion_models import CameraMotionSettings
 from app.models.generation_models import GenerationMode, GenerationParams, Orientation, Resolution
 
 WANPROJ_SCHEMA = "wanproj/1"
+
+# Default video backend module id (PATCH ModularVideoBackendArchitecture v1).
+# Projects without a backend_id load as Wan projects — the literal is kept here
+# to avoid importing the video_backends registry into the model layer.
+DEFAULT_BACKEND_ID = "wan_22"
 
 
 def utc_now() -> str:
@@ -134,6 +139,10 @@ class Project(BaseModel):
     tags: list[str] = Field(default_factory=list)
     created_at: str = Field(default_factory=utc_now)
     updated_at: str = Field(default_factory=utc_now)
+    # Selected video backend module (PATCH ModularVideoBackendArchitecture v1).
+    # Missing/empty in older .wanproj files → normalized to "wan_22" so existing
+    # projects keep loading as Wan projects (§9/§10).
+    backend_id: str = DEFAULT_BACKEND_ID
     generation_mode: GenerationMode = GenerationMode.TEXT2VIDEO
     orientation: Orientation = Orientation.LANDSCAPE
     resolution: Resolution = Field(default_factory=lambda: Resolution(width=1280, height=720))
@@ -151,6 +160,12 @@ class Project(BaseModel):
     app_version: str = "1.0.0"
 
     model_config = {"populate_by_name": True}
+
+    @field_validator("backend_id", mode="before")
+    @classmethod
+    def _default_backend_id(cls, v):
+        """Normalize a missing/empty backend id to the default (§9/§10)."""
+        return (str(v).strip().lower() or DEFAULT_BACKEND_ID) if v is not None else DEFAULT_BACKEND_ID
 
     def composed_prompt(self) -> str:
         """Final prompt = user positive prompt + camera motion fragment (when applied)."""

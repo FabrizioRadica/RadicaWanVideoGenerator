@@ -22,6 +22,11 @@ from app.models.project_models import AudioTrack, VideoEffects
 
 SEQUENCE_SCHEMA = "video_sequence/1"
 
+# Default video backend module id (PATCH ModularVideoBackendArchitecture v1).
+# Sequences without a backend_id load as Wan sequences (§11). Backend selection
+# is global at sequence level in v1 — no per-clip backend override.
+DEFAULT_BACKEND_ID = "wan_22"
+
 
 def utc_now() -> str:
     return datetime.now(timezone.utc).isoformat()
@@ -225,6 +230,13 @@ class VideoSequence(BaseModel):
     # system — no duplicate). Clip prompts are never overwritten by these.
     global_positive_prompt: str = ""
 
+    # Selected video backend module for the whole sequence (§11). v1: global
+    # only — every clip uses this backend; no per-clip backend override.
+    # `backend_params` holds backend-specific values that are not already stored
+    # in global_generation_settings (empty for Wan, whose params live there).
+    backend_id: str = DEFAULT_BACKEND_ID
+    backend_params: dict = Field(default_factory=dict)
+
     global_generation_settings: GlobalGenerationSettings = Field(default_factory=GlobalGenerationSettings)
     global_color_look: VideoEffects = Field(default_factory=VideoEffects)
     sequence_audio_tracks: list[AudioTrack] = Field(default_factory=list)
@@ -259,6 +271,12 @@ class VideoSequence(BaseModel):
                     data["global_generation_settings"] = gs
                 if not (gs.get("negative_prompt") or "").strip():
                     gs["negative_prompt"] = legacy.strip()
+            # Normalize a missing/empty backend id to the default (§11).
+            bid = data.get("backend_id")
+            if not (isinstance(bid, str) and bid.strip()):
+                data["backend_id"] = DEFAULT_BACKEND_ID
+            else:
+                data["backend_id"] = bid.strip().lower()
         return data
 
     def reindex(self) -> None:

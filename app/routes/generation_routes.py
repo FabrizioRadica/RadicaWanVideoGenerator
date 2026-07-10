@@ -41,6 +41,16 @@ async def api_backend_status():
             "model_sampling_support": model_sampling_capabilities()}
 
 
+@router.get("/api/video-backends")
+async def api_video_backends():
+    """Available video backend modules (patch ModularVideoBackendArchitecture
+    §17). Wan 2.2 is the only real, available backend in this patch. No local
+    absolute paths are exposed."""
+    from app.services import video_backends
+
+    return video_backends.describe_all()
+
+
 @router.get("/api/presets")
 async def api_presets(project_id: str | None = None, model_id: str | None = None):
     """Wan2.2 5B preset catalogue + a non-restrictive recommendation based on

@@ -79,6 +79,9 @@ def build_video_metadata(
     sampler_backend: dict | None = None,
     model_sampling: dict | None = None,
     vram_cleanup: dict | None = None,
+    requested_backend: str | None = None,
+    effective_backend: str | None = None,
+    backend_display_name: str | None = None,
 ) -> dict:
     cm = project.camera_motion
     bundle = model_bundle or {}
@@ -183,6 +186,13 @@ def build_video_metadata(
         "requested_duration_seconds": round(project.params.frames / max(project.params.fps, 1), 3),
         "actual_duration_seconds": duration_seconds,
         "backend": backend,
+        # --- Video backend module (patch ModularVideoBackendArchitecture §16) --
+        # requested/effective backend follow the same pattern as sampler/model-
+        # sampling diagnostics. `backend` above is the engine name (wan/mock);
+        # these identify the selected backend MODULE.
+        "requested_backend": requested_backend or getattr(project, "backend_id", "wan_22"),
+        "effective_backend": effective_backend or getattr(project, "backend_id", "wan_22"),
+        "backend_display_name": backend_display_name or "Wan 2.2",
         "mock_generation": is_mock,
         "created_at": datetime.now(timezone.utc).isoformat(),
     }

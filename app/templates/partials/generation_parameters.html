@@ -14,6 +14,14 @@
 <section class="generation-parameters" data-generation-parameters="{{ gp_context }}">
 
   <div class="field">
+    <label class="field-label">Video Backend</label>
+    <select data-video-backend-selector></select>
+    <div class="small muted" style="margin-top:3px;">
+      Backend module architecture — more video backends can be added in future updates.
+    </div>
+  </div>
+
+  <div class="field">
     <label class="field-label">Model</label>
     <select data-field="model_id"></select>
     <span class="small muted" data-role="vram-hint"></span>

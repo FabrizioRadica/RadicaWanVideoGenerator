@@ -322,6 +322,11 @@ def preset_definitions() -> list[dict]:
                 "model_sampling_shift_t2v": 8.0, "model_sampling_shift_i2v": 5.0,
                 "warning": p["warning"], "legacy": True,
             })
+    # Backend-aware presets (patch ModularVideoBackendArchitecture v1 §14): every
+    # Wan preset is tagged with its backend id so it is never applied to a
+    # non-Wan backend in the future. Existing preset behavior is unchanged.
+    for d in defs:
+        d.setdefault("backend_id", "wan_22")
     return defs
 
 

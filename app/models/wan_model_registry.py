@@ -76,6 +76,10 @@ class WanModel(BaseModel):
     display_name: str
     family: str = "Wan2.2"
     version: str = "2.2"
+    # Video backend module this bundle belongs to (PATCH ModularVideoBackend
+    # Architecture v1). Existing Wan bundles without it normalize to "wan_22"
+    # (§15) — no renaming, no forced reconfiguration.
+    backend_id: str = "wan_22"
     generation_type: ModelGenerationType = ModelGenerationType.TEXT2VIDEO
 
     # Backend compatibility
@@ -124,6 +128,7 @@ class WanModel(BaseModel):
         return {
             "model_bundle_id": self.id,
             "model_bundle_name": self.display_name,
+            "backend_id": self.backend_id,
             "generation_type": self.generation_type.value,
             "diffusion_model_path": self.diffusion_model_path,
             "checkpoint_path": self.checkpoint_path,
@@ -170,6 +175,10 @@ def normalize_legacy_entry(data: dict[str, Any]) -> dict[str, Any]:
     status = str(data.get("status", "")).lower().replace(" ", "_")
     if status in ("partially_configured", "partially configured"):
         data["status"] = "partial"
+    # Backend-aware model bundles (§15): existing Wan bundles without a
+    # backend_id are normalized to "wan_22".
+    bid = data.get("backend_id")
+    data["backend_id"] = bid.strip().lower() if isinstance(bid, str) and bid.strip() else "wan_22"
     return data
 
 
