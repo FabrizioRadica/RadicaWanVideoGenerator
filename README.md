@@ -1,16 +1,23 @@
-# Radica · WanVideoGenerator
+# RadicaLab · Local AI Creative Studio
 
-**A browser-based AI video generation studio for Wan 2.2+ — real model loading, real inference, real videos.**
+**A modular, self-hosted local AI creative platform for video generation, prompt workflows, audio tools, game-oriented pipelines and future experimental modules.**
 
 ```text
-Radica - WanVideoGenerator
+RadicaLab
+Current video module: Radica - WanVideoGenerator / Video Studio
 Concept & Design: Fabrizio Radica
 Project by RadicaDesign
 ```
 
-WanVideoGenerator is a professional, self-hosted **Python / FastAPI** web application that generates videos locally with **Wan 2.2 or later** through Hugging Face *diffusers*. It supports **Text2Video**, **Image2Video**, project management, real Wan backend diagnostics, post-processing Color & Look, multi-track audio mixing, ComfyUI workflow export, a dedicated **VideoSequenceQueue** workflow for rendering several clips sequentially, and an optional **AI Prompt Assistant** that writes prompts and plans multi-clip sequences through a local or cloud LLM.
+RadicaLab is the evolution of **Radica - WanVideoGenerator**. The project started as a professional, browser-based local video generation studio for **Wan 2.2+**; it is now moving toward a broader modular platform where different AI engines and creative systems can coexist without locking the application to a single model family.
 
-The UI is fully server-rendered with **Jinja2 + vanilla JavaScript** — no Node.js, no build step, no frontend framework. Everything runs on your machine; nothing is uploaded anywhere.
+The current production-ready module is **Video Studio**, powered today by the real Wan 2.2 backend. The direction of the platform is wider: modular video backends such as **Wan 2.2**, future **LTX Video 2.3+** support, prompt assistants, post-processing, audio workflows, sequence tools, game-development utilities and, later, experimental robotics/simulation modules.
+
+The core philosophy remains unchanged: **local-first, real functionality, no fake generation, no placeholder output, no frontend build chain, and no mock features presented as working systems.**
+
+The application is built with **Python, FastAPI, Jinja2 templates, CSS, vanilla JavaScript, ffmpeg, PyTorch, diffusers, transformers and safetensors**. There is no Node.js, no npm, no React, no Vue, no Angular, no Svelte, no Electron and no Tauri.
+
+Everything runs on your machine. Nothing is uploaded anywhere unless you explicitly configure an external AI provider for optional assistant features.
 
 <img width="1264" height="690" alt="Screenshot 2026-07-07 084827" src="https://github.com/user-attachments/assets/20c683fd-6538-48b3-a50f-6147df525043" />
 
@@ -18,32 +25,194 @@ The UI is fully server-rendered with **Jinja2 + vanilla JavaScript** — no Node
 
 <img width="2542" height="1393" alt="immagine" src="https://github.com/user-attachments/assets/50e3efd3-9359-47b6-9231-38b04aec5491" />
 
+---
+
+## Platform vision
+
+RadicaLab is designed as a **modular local AI workbench**, not as a single-model demo. The current focus is video generation, but the architecture is moving toward independent modules that can be enabled, extended or replaced over time.
+
+Planned platform areas:
+
+```text
+RadicaLab
+  Video Studio
+    Wan 2.2 backend
+    Future LTX Video 2.3+ backend
+    Future video backends
+  Prompt Assistant
+    Single Clip prompt generation
+    Multi-clip sequence planning
+    Backend-aware prompt guidance
+  Audio Studio
+    Multi-track audio post-processing
+    Future voice/music/audio tools
+  Game Tools
+    Future game-oriented AI pipelines
+    Asset, prompt and prototype helpers
+  Robotics Lab
+    Future robotics/simulation experiments
+    Possible digital-twin and control-system utilities
+```
+
+The goal is not to turn the application into a generic collection of disconnected tools. The goal is to build a coherent local production environment where each module produces real output and can work with the others.
+
+---
+
+## Current status
+
+The current working application is still centered on **Video Studio** and the existing **Wan 2.2+** workflow:
+
+```text
+Text2Video
+Image2Video
+Single Clip
+VideoSequenceQueue
+AI Prompt Assistant
+Color & Look
+Audio Tracks
+Model Bundles
+Project management
+Local backend diagnostics
+ComfyUI workflow export
+```
+
+Wan 2.2 is no longer treated as the permanent identity of the whole platform. It is becoming the **first video backend module** inside RadicaLab.
+
+Future video engines should be integrated through a backend-module layer instead of being hardcoded throughout the app.
+
+---
+
+## Core principles
+
+- **Local-first**: generation runs on the user's machine whenever possible.
+- **Real generation only**: no fake video, no fake preview, no placeholder success.
+- **Modular growth**: new engines and tools should be added as modules, not by rewriting the app.
+- **Stable Single Clip**: the current Single Clip workflow must remain reliable while the platform grows.
+- **Backend honesty**: requested and effective generation parameters must be visible and diagnosable.
+- **No unnecessary frontend stack**: server-rendered HTML, CSS and vanilla JavaScript only.
+- **Project portability**: projects, sequences and assets should use relative paths and local folders.
+- **Patch-friendly development**: changes should be incremental, reviewable and tracked.
 
 ---
 
 ## Features
 
-- 🎬 **Real Wan 2.2+ generation** — Text2Video and Image2Video via diffusers `WanPipeline` / `WanImageToVideoPipeline`, with prompt, negative prompt, seed, frames, FPS, guidance scale, steps and resolution control.
-- 🧩 **VideoSequenceQueue** — a separate workflow next to Single Clip for building multiple ordered clips, rendering them sequentially, stopping/resuming from the current clip, reusing Color & Look and Audio Tracks, exporting separate clips, and optionally creating a merged final video.
-- ✨ **AI Prompt Assistant** — optional, provider-based assistant that generates positive/negative prompts for the current clip and plans multi-clip cinematic sequences that populate the existing VideoSequenceQueue. Supports **Ollama, LM Studio, OpenAI, Anthropic and DeepSeek**, releases local LLM VRAM/RAM after use, and never starts a render by itself.
-- 🔔 **Audio feedback** — reusable, synthesized (Web Audio) sound cues on clip completion, sequence completion, AI-populated sequences, warnings and errors — no audio asset files required, fully configurable.
-- 📦 **Model Bundle manager** — register local model files such as diffusion model/DiT, VAE, text encoder, tokenizer and LoRAs. Supports ComfyUI-repackaged single `.safetensors` files, fp8-scaled text encoders, and diffusers pipeline folders.
-- 🗂 **Project-based workflow** — every single clip project lives in a project folder with `source/`, `outputs/`, `previews/`, `metadata/`, `workflows/` and a portable `.wanproj` file.
-- 🧵 **Sequence projects** — sequence projects are saved separately from single clip projects and can be reloaded later to continue work. Each sequence stores clips, assets, outputs, global settings, per-clip overrides, Color & Look state, Audio Tracks and render state.
-- 🎥 **Camera Motion Assistant** — 16 camera movements with an animated diagram that composes a camera prompt fragment without touching your text.
-- 📊 **Honest job system** — background generation with live progress, stage log, requested-vs-effective metadata and readable failures. The app never produces fake or placeholder output.
-- ⏱ **Duration control** — set duration in seconds; duration, FPS and frame count stay synchronized with Wan's valid frame-count rule.
-- 🖥 **System resource monitor** — live CPU / RAM / GPU / VRAM / disk pills in the topbar with warning states.
-- 🔄 **Persistent generation progress** — jobs live server-side; switch pages or refresh the browser and the progress strip re-attaches to the running job.
-- 🎨 **Color & Look video effects** — saturation, contrast, hue, temperature, shadows, highlights, brightness, gamma, vignette, film grain, sharpness and optional VHS effect. Applied through ffmpeg as post-processing; raw video is never modified.
-- 🎵 **Audio Tracks post-processing** — upload multiple audio files, set volume/start/fades/loop/trim per track, and mix them into finished videos with ffmpeg. Raw video is never modified.
-- 🖼 **Video, project and sequence libraries** — browse, preview, reload, download, copy metadata and manage outputs.
-- 🔌 **ComfyUI workflow export** — JSON node graph plus complete generation metadata.
-- ⚙️ **Everything configurable via `.env`**, with a live backend-readiness indicator in the UI.
+- 🎬 **Video Studio with real Wan 2.2+ generation** — Text2Video and Image2Video through the current Wan backend using diffusers, with real model loading, real inference and real output files.
+- 🧩 **Modular video backend direction** — Wan 2.2 is being structured as the first selectable video backend. Future backends such as LTX Video 2.3+ should provide their own parameters, presets, validation and diagnostics without breaking existing Wan workflows.
+- 🧵 **VideoSequenceQueue** — build ordered multi-clip sequences, render clips sequentially, stop/resume safely, reuse Color & Look and Audio Tracks, export separate clips and optionally create a merged final video.
+- ✨ **AI Prompt Assistant** — optional provider-based assistant for Single Clip prompts and multi-clip sequence planning. Supports local and cloud providers, but never starts renders by itself.
+- 🔔 **Audio feedback** — synthesized Web Audio cues for completions, warnings and errors, without external audio asset files.
+- 📦 **Model Bundle manager** — register local model components and pipeline folders. Current production use is Wan-oriented, with a path toward backend-specific model registries.
+- 🗂 **Project-based workflow** — single clips and sequences are saved as local projects with assets, outputs, metadata and portable project files.
+- 🎥 **Camera Motion Assistant** — camera movement helper that composes motion prompt fragments without overwriting user text.
+- 📊 **Honest job system** — background generation with progress, stage log, requested-vs-effective metadata and readable failures.
+- ⏱ **Duration control** — duration, FPS and frame count stay synchronized with valid backend rules.
+- 🖥 **System resource monitor** — live CPU, RAM, GPU, VRAM and disk indicators.
+- 🔄 **Persistent generation progress** — running jobs remain server-side and can reconnect after refresh/navigation.
+- 🎨 **Color & Look** — ffmpeg-based visual post-processing that never modifies raw generated videos.
+- 🎵 **Audio Tracks** — multi-track audio post-processing for clips and final sequences.
+- 🖼 **Video, project and sequence libraries** — browse, preview, reload, download and manage outputs.
+- 🔌 **ComfyUI workflow export** — export generation metadata and workflow graphs.
+- ⚙️ **Configurable through `.env` and local config files** — with readable backend-readiness indicators.
 
 ---
 
-## What is new: VideoSequenceQueue
+## Modular video backend direction
+
+The next architectural step is to make video generation backend-aware. Instead of assuming that every render is Wan-specific, the platform should route generation through a backend registry.
+
+Conceptual structure:
+
+```text
+app/services/video_backends/
+  base.py
+  registry.py
+  wan_backend_module.py
+  future_ltx_backend_module.py
+```
+
+Each backend module should define:
+
+```text
+backend_id
+display_name
+supported modes
+common parameter mapping
+backend-specific parameter schema
+model compatibility
+preset compatibility
+validation rules
+generation function
+diagnostics
+```
+
+The first registered backend is expected to be:
+
+```text
+wan_22
+```
+
+Future backends may include:
+
+```text
+ltx_23
+future_video_backend
+```
+
+The important rule is that new engines must not be added by duplicating the whole application or by hardcoding model-specific assumptions into unrelated modules.
+
+---
+
+## Video Studio module
+
+Video Studio is the current production module of RadicaLab. It contains the existing Single Clip and VideoSequenceQueue workflows.
+
+The current backend is Wan 2.2+, but the UI and backend should gradually move toward this mental model:
+
+```text
+Video Studio
+  Common generation settings
+  Selected video backend
+  Backend-specific settings
+  Backend-specific presets
+  Backend-specific model bundles
+  Backend diagnostics
+```
+
+Common parameters should remain shared where possible:
+
+```text
+prompt
+negative prompt
+mode
+width
+height
+frames
+fps
+seed
+steps
+guidance / cfg
+source image
+output format
+```
+
+Backend-specific parameters should stay isolated inside each backend module.
+
+For Wan, examples include:
+
+```text
+ModelSamplingSD3
+flow-matching shift
+Wan model bundle components
+Wan sampler compatibility
+Wan-specific presets
+```
+
+For future LTX support, the backend will need its own model layout, parameters, validation and presets. LTX must not be faked by renaming Wan settings.
+
+---
+
+## Video Studio: VideoSequenceQueue
 
 The **VideoSequenceQueue** is a separate section beside the current Single Clip workflow:
 
@@ -264,7 +433,7 @@ Uploaded reference images and audio files are copied into the sequence project f
 
 ---
 
-## What is new: AI Prompt Assistant
+## AI Prompt Assistant
 
 The **AI Prompt Assistant** is an optional, modular layer that helps you write prompts and plan sequences using a language model of your choice. It is **disabled by default** and is enabled from **Settings → 🤖 AI Assistant**.
 
@@ -476,8 +645,8 @@ A local `tokenizer_path` is recommended. Without it, the backend may try to fetc
 ### 1. Clone or copy the project
 
 ```bash
-git clone <your-repo-url> RadicaWanGen
-cd RadicaWanGen
+git clone <your-repo-url> RadicaLab
+cd RadicaLab
 ```
 
 If you already have the project folder locally, just open a terminal inside it.
@@ -1334,7 +1503,8 @@ By downloading, installing, or running this project, you declare that you have r
 ## Credits
 
 ```text
-Radica - WanVideoGenerator
+RadicaLab
+Current video module: Radica - WanVideoGenerator / Video Studio
 Concept & Design: Fabrizio Radica
 Project by RadicaDesign
 ```
@@ -1342,4 +1512,4 @@ Project by RadicaDesign
 ## Please Donate
 https://www.paypal.com/donate/?hosted_button_id=TTBHUJ7CFE78N
 
-Built on the shoulders of [Wan 2.2](https://github.com/Wan-Video/Wan2.2), [Hugging Face diffusers](https://github.com/huggingface/diffusers), FastAPI, PyTorch and ffmpeg.
+Current Video Studio backend built on the shoulders of [Wan 2.2](https://github.com/Wan-Video/Wan2.2), [Hugging Face diffusers](https://github.com/huggingface/diffusers), FastAPI, PyTorch and ffmpeg.
