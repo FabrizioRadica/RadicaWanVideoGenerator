@@ -4,13 +4,16 @@
 
 {% block content %}
 <div class="panel about-card">
-  <div class="logo-big">W</div>
+  <div class="logo-big">R</div>
   <h1 style="margin-bottom:4px;">{{ app_name }}</h1>
-  <p class="muted" style="margin-top:0;">Version {{ app_version }}</p>
+  <p class="muted" style="margin-top:0;">{{ app_subtitle }} · Version {{ app_version }}</p>
   <p>
-    A professional browser-based studio for AI video generation projects using
-    <strong>Wan2.2</strong> and later models — Text2Video, Image2Video, Camera Motion
-    Assistant, model management and ComfyUI workflow export.
+    {{ app_name }} is a modular local AI creative studio for video generation, prompt
+    workflows, post-processing and future creative/technical modules.
+  </p>
+  <p class="small muted">
+    <strong>VideoLab</strong> currently includes <strong>Wan 2.2</strong> as an active
+    video backend. Future modules may include GameLab, AudioLab and RoboticsLab.
   </p>
   <hr class="divider">
   <p style="line-height:2;">

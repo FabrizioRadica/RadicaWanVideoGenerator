@@ -391,6 +391,28 @@
   font-size: 28px; font-weight: 700; color: #fff;
 }
 
+/* ---------- Planned module pages (GameLab / AudioLab / RoboticsLab) ---------- */
+.planned-hero { margin-bottom: 20px; }
+.planned-hero h1 { font-size: 24px; }
+.planned-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 12px;
+}
+.planned-card {
+  background: var(--panel-2);
+  border: 1px solid var(--border-soft);
+  border-radius: 10px;
+  padding: 13px 14px;
+}
+.planned-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.planned-card-head .badge { opacity: 0.85; }
+
 /* ===== System resource monitor (topbar) ===== */
 .sysmon {
   display: flex;

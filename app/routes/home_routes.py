@@ -31,7 +31,7 @@ def _editor_context(request: Request, project_id: str | None):
         models = []
     return page_context(
         request,
-        "home",
+        "videolab",
         projects=projects,
         current_project=current,
         current_project_json=current.to_wanproj_dict() if current else None,
@@ -57,3 +57,111 @@ async def home(request: Request, project: str | None = None):
 @router.get("/about", response_class=HTMLResponse)
 async def about(request: Request):
     return templates.TemplateResponse(request, "about.html", page_context(request, "about"))
+
+
+# --- Planned modules (RadicaLab Modular Platform Shell) -----------------------
+# These are honest, navigable "planned module" pages. They expose NO working
+# tools, start no jobs, call no fake APIs and create no files. VideoLab is the
+# only operational module in this shell; GameLab/AudioLab/RoboticsLab are future
+# work. Do not turn these into fake editors/exporters/players.
+
+_PLANNED_MODULES = {
+    "game-lab": {
+        "active": "gamelab",
+        "title": "GameLab",
+        "tagline": "Interactive web game tools are planned for a future release.",
+        "intro": "GameLab will reuse videos, images, audio and assets generated inside "
+                 "RadicaLab to build standalone interactive web games.",
+        "items": [
+            {"title": "Interactive Video Game Builder", "note": "Assemble branching interactive video experiences."},
+            {"title": "Scene Flow", "note": "Connect scenes and outcomes into a playable flow."},
+            {"title": "QTE Events", "note": "Quick-time events layered over generated video."},
+            {"title": "Test Play", "note": "Play through a project inside RadicaLab."},
+            {"title": "Standalone Web Export", "note": "Export a self-contained web build."},
+        ],
+        "footer": "The next planned patch will implement GameLab as a real interactive "
+                  "web game builder. Nothing here is functional yet.",
+    },
+    "audio-lab": {
+        "active": "audiolab",
+        "title": "AudioLab",
+        "tagline": "Audio tools are planned for a future release.",
+        "intro": "AudioLab will provide reusable audio assets for video and game projects "
+                 "across RadicaLab.",
+        "items": [
+            {"title": "Sound design", "note": None},
+            {"title": "Music beds", "note": None},
+            {"title": "Voiceover tools", "note": None},
+            {"title": "Audio post-processing", "note": None},
+            {"title": "Reusable audio assets", "note": "Shared across video and game projects."},
+        ],
+        "footer": "Audio post-processing for finished videos already lives inside VideoLab "
+                  "(Audio Tracks). AudioLab as a standalone module is not implemented yet.",
+    },
+    "robotics-lab": {
+        "active": "roboticslab",
+        "title": "RoboticsLab",
+        "tagline": "Robotics and simulation tools are planned for a future release.",
+        "intro": "RoboticsLab will explore simulation and AI-controlled systems as a future "
+                 "RadicaLab module.",
+        "items": [
+            {"title": "Simulation workflows", "note": None},
+            {"title": "Robotics task planning", "note": None},
+            {"title": "AI-controlled systems", "note": None},
+            {"title": "Digital twin experiments", "note": None},
+        ],
+        "footer": "This module is a direction, not an implementation. No robotics "
+                  "integration, simulation or ROS controls are available yet.",
+    },
+    "more-modules": {
+        "active": "more-modules",
+        "title": "More Modules",
+        "tagline": "RadicaLab is a modular platform — more creative and technical modules are planned.",
+        "intro": "VideoLab is the first operational module. Additional modules will be added "
+                 "over time and will reuse assets generated across RadicaLab.",
+        "items": [
+            {"title": "GameLab", "note": "Interactive web game builder."},
+            {"title": "AudioLab", "note": "Sound design and audio assets."},
+            {"title": "RoboticsLab", "note": "Simulation and robotics workflows."},
+        ],
+        "footer": "The backend and module architecture is prepared for future modules. "
+                  "No unavailable module is presented as functional.",
+    },
+}
+
+
+def _planned_page(request: Request, slug: str):
+    spec = _PLANNED_MODULES[slug]
+    return templates.TemplateResponse(
+        request,
+        "planned_module.html",
+        page_context(
+            request,
+            spec["active"],
+            module_title=spec["title"],
+            module_tagline=spec["tagline"],
+            module_intro=spec["intro"],
+            planned_items=spec["items"],
+            module_footer=spec["footer"],
+        ),
+    )
+
+
+@router.get("/game-lab", response_class=HTMLResponse)
+async def game_lab(request: Request):
+    return _planned_page(request, "game-lab")
+
+
+@router.get("/audio-lab", response_class=HTMLResponse)
+async def audio_lab(request: Request):
+    return _planned_page(request, "audio-lab")
+
+
+@router.get("/robotics-lab", response_class=HTMLResponse)
+async def robotics_lab(request: Request):
+    return _planned_page(request, "robotics-lab")
+
+
+@router.get("/more-modules", response_class=HTMLResponse)
+async def more_modules(request: Request):
+    return _planned_page(request, "more-modules")

@@ -182,10 +182,10 @@ window.WVG = window.WVG || {};
         slot.innerHTML = '<span class="badge badge-accent" title="Simulated output for UI testing — NOT real Wan generation">MOCK BACKEND (developer mode)</span>';
       } else if (s.ready) {
         var dev = s.device_name ? " · " + s.device_name : (s.device ? " · " + s.device : "");
-        slot.innerHTML = '<span class="badge" style="color:var(--success,#4ade80);border-color:currentColor;" title="Real Wan generation backend is ready">● wan backend ready' + dev + "</span>";
+        slot.innerHTML = '<span class="badge" style="color:var(--success,#4ade80);border-color:currentColor;" title="Video backend ready — active backend: Wan 2.2">● video backend ready · active backend: Wan 2.2' + dev + "</span>";
       } else {
         var why = s.error || s.device_error || ((s.missing_dependencies || []).length ? "Missing packages: " + s.missing_dependencies.join(", ") : "not ready");
-        slot.innerHTML = '<span class="badge" style="color:var(--danger,#f87171);border-color:currentColor;" title="' + String(why).replace(/"/g, "&quot;") + '">● wan backend NOT ready — hover for details</span>';
+        slot.innerHTML = '<span class="badge" style="color:var(--danger,#f87171);border-color:currentColor;" title="' + String(why).replace(/"/g, "&quot;") + '">● video backend NOT ready — hover for details</span>';
       }
       WVG.backendStatus = s;
       document.dispatchEvent(new CustomEvent("wvg:backend-status"));

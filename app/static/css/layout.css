@@ -35,14 +35,24 @@
   font-size: 14px;
   flex-shrink: 0;
 }
-.sidebar-brand .name { font-size: 13px; font-weight: 700; line-height: 1.2; }
+.sidebar-brand .name { font-size: 14px; font-weight: 700; line-height: 1.2; letter-spacing: 0.2px; }
 .sidebar-brand .version { font-size: 10px; color: var(--muted-2); }
+.sidebar-brand .tagline { font-size: 10px; color: var(--muted-2); margin-top: 2px; }
 
 .sidebar-new {
   margin: 6px 12px 12px;
 }
 
 .sidebar-nav { flex: 1; padding: 4px 8px; overflow-y: auto; }
+.nav-group {
+  padding: 12px 11px 5px;
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.9px;
+  text-transform: uppercase;
+  color: var(--muted-2);
+}
+.nav-group:first-child { padding-top: 4px; }
 .nav-item {
   display: flex;
   align-items: center;
@@ -124,7 +134,8 @@
 @media (max-width: 760px) {
   .editor-grid { grid-template-columns: 1fr; }
   .sidebar { width: 64px; }
-  .sidebar-brand .name, .sidebar-brand .version, .nav-item .label, .sidebar-footer { display: none; }
+  .sidebar-brand .name, .sidebar-brand .version, .sidebar-brand .tagline,
+  .nav-item .label, .nav-group, .sidebar-footer { display: none; }
 }
 
 /* Cards grid for library/projects pages */

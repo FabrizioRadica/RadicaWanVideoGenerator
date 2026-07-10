@@ -209,7 +209,7 @@ class SequenceOutputs(BaseModel):
 
 
 class SequenceCredits(BaseModel):
-    application: str = "Radica - WanVideoGenerator"
+    application: str = "RadicaLab"
     concept_and_design: str = "Fabrizio Radica"
     project_by: str = "RadicaDesign"
 

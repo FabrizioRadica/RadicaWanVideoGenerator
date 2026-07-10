@@ -13,6 +13,7 @@ TEMPLATES_DIR = Path(__file__).resolve().parent.parent / "templates"
 templates = Jinja2Templates(directory=str(TEMPLATES_DIR))
 templates.env.globals.update(
     app_name=settings.app_name,
+    app_subtitle=settings.app_subtitle,
     app_version=settings.app_version,
     credits_concept=settings.credits_concept,
     credits_project=settings.credits_project,

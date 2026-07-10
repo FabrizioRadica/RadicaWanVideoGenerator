@@ -81,7 +81,11 @@ def _resolution(key: str, default: str) -> tuple[int, int]:
 @dataclass
 class Settings:
     # Application
-    app_name: str = field(default_factory=lambda: _str("APP_NAME", "Radica - WanVideoGenerator"))
+    # Visible platform identity. RadicaLab is a modular local AI creative studio;
+    # the video generation area lives inside the VideoLab module and Wan 2.2 is
+    # only the active video backend, no longer the application brand.
+    app_name: str = field(default_factory=lambda: _str("APP_NAME", "RadicaLab"))
+    app_subtitle: str = field(default_factory=lambda: _str("APP_SUBTITLE", "Local AI Creative Studio"))
     app_version: str = field(default_factory=lambda: _str("APP_VERSION", "1.0.0"))
     app_env: str = field(default_factory=lambda: _str("APP_ENV", "development"))
     app_debug: bool = field(default_factory=lambda: _bool("APP_DEBUG", True))

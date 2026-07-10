@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% set page_title = module_title %}
+{% set page_subtitle = "Planned module" %}
+{% block title %}{{ module_title }} — {{ app_name }}{% endblock %}
+
+{% block content %}
+<div class="panel" style="max-width:900px;">
+  <div class="planned-hero">
+    <span class="badge badge-accent">Planned module</span>
+    <h1 style="margin:12px 0 6px;">{{ module_title }}</h1>
+    <p class="muted" style="margin-top:0;">{{ module_tagline }}</p>
+    <p>{{ module_intro }}</p>
+  </div>
+
+  {% if planned_items %}
+  <h2 class="small muted" style="text-transform:uppercase;letter-spacing:0.6px;margin:8px 0 12px;">Planned direction</h2>
+  <div class="planned-grid">
+    {% for item in planned_items %}
+    <div class="planned-card">
+      <div class="planned-card-head">
+        <strong>{{ item.title }}</strong>
+        <span class="badge">Coming soon</span>
+      </div>
+      {% if item.note %}<p class="small muted" style="margin:6px 0 0;">{{ item.note }}</p>{% endif %}
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {% if module_footer %}
+  <hr class="divider">
+  <p class="small muted">{{ module_footer }}</p>
+  {% endif %}
+</div>
+{% endblock %}
