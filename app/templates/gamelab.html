@@ -1,0 +1,335 @@
+{% extends "base.html" %}
+{% set page_title = "GameLab" %}
+{% set page_subtitle = "Interactive Web Game Builder" %}
+{% block title %}GameLab — {{ app_name }}{% endblock %}
+
+{% block content %}
+<div class="gl" id="gamelab" data-gl-tab="qte" data-options='{{ gamelab_options | tojson }}'>
+
+  <!-- Internal GameLab modes (PATCH_GameLabPromptToGameConfig_v1) -->
+  <div class="gl-tabs">
+    <div class="mode-tabs">
+      <button class="mode-tab active" id="gl-tab-btn-qte" data-gl-tab="qte">🎮 QTE Games</button>
+      <button class="mode-tab" id="gl-tab-btn-ai" data-gl-tab="ai">✨ AI Game Generator</button>
+    </div>
+    <p class="muted small gl-tab-subtitle" id="gl-tab-subtitle">Build interactive video games
+      with scenes, QTE events, branching flow and standalone web export.</p>
+  </div>
+
+  <div class="gl-toolbar">
+    <div class="field" style="margin:0;min-width:220px;">
+      <select id="gl-project-select"><option value="">— Select a game —</option></select>
+    </div>
+    <button class="btn btn-primary btn-sm" id="gl-new">＋ New Game</button>
+    <button class="btn btn-sm gl-qte-only" id="gl-save" disabled>💾 Save</button>
+    <button class="btn btn-sm gl-qte-only" id="gl-play" disabled>▶ Test Play</button>
+    <button class="btn btn-sm gl-qte-only" id="gl-export" disabled>⬇ Export Web Build</button>
+    <button class="btn btn-sm btn-danger" id="gl-delete-game" disabled>🗑 Delete Game</button>
+    <span class="gl-valid gl-qte-only" id="gl-validation"></span>
+  </div>
+
+  <!-- ============================ QTE GAMES MODE ============================ -->
+  <div id="gl-tab-qte">
+
+  <div id="gl-empty" class="empty-state" style="max-width:560px;margin:60px auto;">
+    <div style="font-size:40px;margin-bottom:10px;">🎮</div>
+    <h2>GameLab — Interactive Web Game Builder</h2>
+    <p class="muted">Build a small nostalgic interactive web game from video/image scenes,
+      QTE events and scene flow — then export a standalone browser build. GameLab does not
+      generate video; import media from the Library or upload your own.</p>
+    <button class="btn btn-primary" id="gl-new-2">＋ Create your first game</button>
+  </div>
+
+  <div class="gl-grid" id="gl-workspace" style="display:none;">
+
+    <!-- Column 1: Game Setup + Scenes -->
+    <div class="gl-col">
+      <div class="panel">
+        <div class="panel-header"><h2>Game Setup</h2></div>
+        <div class="field">
+          <label class="field-label" for="gl-title">Game Title</label>
+          <input type="text" id="gl-title" maxlength="80" placeholder="Neon Rebel">
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label class="field-label" for="gl-template">Template</label>
+            <select id="gl-template"></select>
+          </div>
+          <div class="field">
+            <label class="field-label" for="gl-theme">Theme</label>
+            <select id="gl-theme"></select>
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label" for="gl-start">Start Scene</label>
+          <select id="gl-start"></select>
+        </div>
+        <div class="field-row">
+          <div class="field" style="max-width:110px;">
+            <label class="field-label" for="gl-lives">Lives</label>
+            <input type="number" id="gl-lives" min="1" max="99" value="3">
+          </div>
+          <div class="field">
+            <label class="field-label" for="gl-checkpoint">Checkpoint Mode</label>
+            <select id="gl-checkpoint"><option value="latest_checkpoint">Latest checkpoint</option></select>
+          </div>
+        </div>
+        <label class="gl-check"><input type="checkbox" id="gl-hud"> Show HUD</label>
+        <label class="gl-check"><input type="checkbox" id="gl-sfx"> Enable SFX <span class="muted small">(QTE beeps)</span></label>
+        <label class="gl-check"><input type="checkbox" id="gl-music"> Enable Music
+          <span class="muted small">(saved — music layer in a future patch)</span></label>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header">
+          <h2>Scenes</h2>
+          <span class="hint" id="gl-scene-count"></span>
+        </div>
+        <div class="gl-scene-actions">
+          <button class="btn btn-sm" id="gl-add-scene">＋ Scene</button>
+          <button class="btn btn-sm" id="gl-add-failure">＋ Failure</button>
+          <button class="btn btn-sm" id="gl-add-end">＋ End</button>
+          <button class="btn btn-sm" id="gl-import-lib">📚 Import from Library</button>
+        </div>
+        <div class="gl-scene-list" id="gl-scene-list"></div>
+      </div>
+    </div>
+
+    <!-- Column 2: Scene Editor -->
+    <div class="gl-col">
+      <div class="panel" id="gl-editor-panel">
+        <div class="panel-header"><h2>Scene Editor</h2></div>
+        <div id="gl-editor-empty" class="muted small" style="padding:20px 0;">
+          Select a scene to edit, or add one.
+        </div>
+        <div id="gl-editor" style="display:none;">
+          <div class="field">
+            <label class="field-label" for="gl-s-name">Scene Name</label>
+            <input type="text" id="gl-s-name" maxlength="80">
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label class="field-label" for="gl-s-type">Scene Type</label>
+              <select id="gl-s-type"></select>
+            </div>
+            <div class="field" data-when="interactive">
+              <label class="field-label" for="gl-s-interaction">Interaction Type</label>
+              <select id="gl-s-interaction"></select>
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="field-label">Media Source</label>
+            <div class="gl-media">
+              <div class="gl-media-thumb" id="gl-s-media-thumb"></div>
+              <div style="flex:1;min-width:0;">
+                <div class="mono small" id="gl-s-media-path" style="word-break:break-all;">No media</div>
+                <div class="gl-media-actions">
+                  <button class="btn btn-sm" id="gl-s-upload">⬆ Upload</button>
+                  <button class="btn btn-sm" id="gl-s-import">🔁 Replace from Library</button>
+                </div>
+              </div>
+            </div>
+            <input type="file" id="gl-s-file" accept="video/*,image/*" style="display:none;">
+          </div>
+
+          <!-- interaction = none -->
+          <div class="field" data-when="none">
+            <label class="field-label" for="gl-s-next">Next Scene</label>
+            <select id="gl-s-next"></select>
+          </div>
+
+          <!-- interaction = qte -->
+          <div data-when="qte">
+            <div class="field-row">
+              <div class="field">
+                <label class="field-label" for="gl-s-qtekey">QTE Key</label>
+                <select id="gl-s-qtekey"></select>
+              </div>
+              <div class="field" style="max-width:140px;">
+                <label class="field-label" for="gl-s-timelimit">Time Limit (s)</label>
+                <input type="number" id="gl-s-timelimit" min="0.5" max="30" step="0.5" value="3">
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="field">
+                <label class="field-label" for="gl-s-success">Success Target</label>
+                <select id="gl-s-success"></select>
+              </div>
+              <div class="field">
+                <label class="field-label" for="gl-s-failure">Failure Target</label>
+                <select id="gl-s-failure"></select>
+              </div>
+            </div>
+          </div>
+
+          <!-- failure scene -->
+          <div class="field" data-when="failure">
+            <label class="field-label" for="gl-s-after">After Failure Behavior</label>
+            <select id="gl-s-after"></select>
+          </div>
+
+          <label class="gl-check" data-when="not-end"><input type="checkbox" id="gl-s-checkpoint"> Checkpoint scene</label>
+
+          <div class="gl-editor-footer">
+            <button class="btn btn-sm" id="gl-s-duplicate">⧉ Duplicate</button>
+            <button class="btn btn-sm btn-danger" id="gl-s-delete">🗑 Delete</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Column 3: Scene Flow + Test Play -->
+    <div class="gl-col">
+      <div class="panel">
+        <div class="panel-header"><h2>Scene Flow</h2><span class="hint">read-only</span></div>
+        <div class="gl-flow" id="gl-flow"></div>
+      </div>
+      <div class="panel">
+        <div class="panel-header"><h2>Test Play</h2></div>
+        <p class="small muted">Play the current game using the same runtime the exported
+          build uses. QTE: press the shown key before the timer runs out.</p>
+        <button class="btn btn-primary" id="gl-play-2" disabled>▶ Play</button>
+      </div>
+    </div>
+
+  </div>
+  </div><!-- /gl-tab-qte -->
+
+  <!-- ======================== AI GAME GENERATOR MODE ======================== -->
+  <div id="gl-tab-ai" style="display:none;">
+
+    <div id="gl-ai-empty" class="empty-state" style="max-width:560px;margin:60px auto;">
+      <div style="font-size:40px;margin-bottom:10px;">✨</div>
+      <h2>AI Game Generator</h2>
+      <p class="muted">Generate Canvas2D browser games from prompts using controlled
+        templates and validated configurations. Select or create a game project first —
+        the generated configuration is stored inside the GameLab project.</p>
+      <button class="btn btn-primary" id="gl-ai-new">＋ Create a game project</button>
+    </div>
+
+    <div class="gl-grid" id="gl-ai-workspace" style="display:none;">
+
+      <!-- Column 1: Template Repository -->
+      <div class="gl-col">
+        <div class="panel">
+          <div class="panel-header"><h2>Template Repository</h2>
+            <span class="hint" id="gl-ai-tpl-count"></span></div>
+          <p class="small muted" style="margin-top:0;">Controlled Canvas2D templates from
+            <span class="mono">gamelab_templates/</span>. Select one manually — the runtime
+            stays locked; the AI only generates its configuration.</p>
+          <div class="gl-tpl-list" id="gl-ai-tpl-list"><p class="muted small">Loading…</p></div>
+          <div id="gl-ai-tpl-invalid"></div>
+        </div>
+        <div class="panel" id="gl-ai-tpl-detail" style="display:none;">
+          <div class="panel-header"><h2 id="gl-ai-tpl-name"></h2></div>
+          <p class="small muted" id="gl-ai-tpl-desc"></p>
+          <div class="gl-tpl-caps" id="gl-ai-tpl-caps"></div>
+          <p class="small muted" style="margin-bottom:0;">🔒 Template locked runtime —
+            generation only produces a JSON configuration.</p>
+        </div>
+      </div>
+
+      <!-- Column 2: Prompt & Design + Generated Config Preview -->
+      <div class="gl-col">
+        <div class="panel">
+          <div class="panel-header"><h2>Prompt &amp; Design</h2></div>
+          <div class="field">
+            <label class="field-label" for="gl-ai-prompt">Game prompt</label>
+            <textarea id="gl-ai-prompt" rows="5" maxlength="4000"
+              placeholder="Describe your game idea, mechanics and style. Unsupported features are adapted to the closest supported behavior and reported as warnings."></textarea>
+          </div>
+          <div class="subsection-title">AI Assistant</div>
+          <div class="field-row">
+            <div class="field">
+              <label class="field-label" for="gl-ai-provider">Provider</label>
+              <select id="gl-ai-provider"></select>
+            </div>
+            <div class="field">
+              <label class="field-label" for="gl-ai-model">Model</label>
+              <input type="text" id="gl-ai-model" placeholder="provider default">
+            </div>
+          </div>
+          <p class="small muted">Uses the shared AI Assistant provider layer and its resource
+            rules. API keys and defaults are managed in Settings → AI Prompt Assistant.</p>
+          <div class="action-row">
+            <button class="btn btn-primary" id="gl-ai-generate" disabled>✨ Generate Game Config</button>
+            <span class="small muted" id="gl-ai-gen-status"></span>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header"><h2>Generated Config Preview</h2>
+            <span class="hint">editable before build</span></div>
+          <div id="gl-ai-config-empty" class="muted small" style="padding:12px 0;">
+            No configuration generated yet.</div>
+          <div id="gl-ai-config-wrap" style="display:none;">
+            <textarea id="gl-ai-config" class="gl-config-editor" rows="16" spellcheck="false"></textarea>
+            <div class="action-row" style="margin-top:8px;">
+              <button class="btn btn-sm" id="gl-ai-apply">✓ Apply &amp; Revalidate</button>
+              <span class="small muted" id="gl-ai-config-meta"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Column 3: Validation + Build & Export -->
+      <div class="gl-col">
+        <div class="panel">
+          <div class="panel-header"><h2>Validation</h2>
+            <span class="hint">schema &amp; compatibility</span></div>
+          <div id="gl-ai-validation"><p class="muted small">Nothing to validate yet.</p></div>
+        </div>
+        <div class="panel">
+          <div class="panel-header"><h2>Build &amp; Export</h2></div>
+          <div class="gl-ready-list" id="gl-ai-readiness"></div>
+          <div class="action-row" style="margin-top:10px;">
+            <button class="btn btn-primary" id="gl-ai-build" disabled>🔨 Build &amp; Export Game</button>
+          </div>
+          <div class="action-row">
+            <button class="btn" id="gl-ai-play" disabled>▶ Test Play</button>
+            <span class="small muted">Runtime Preview — plays the real standalone build.</span>
+          </div>
+          <p class="small muted" id="gl-ai-export-info" style="margin-bottom:0;"></p>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- /gl-tab-ai -->
+</div>
+
+<!-- Test Play modal (fullscreen). The iframe runs the exact export runtime. -->
+<div class="modal-backdrop" id="gl-play-modal">
+  <div class="modal gl-play-modal">
+    <div class="modal-header">
+      <h2>Test Play</h2>
+      <button class="btn btn-icon" onclick="GameLab.closePlay()">✕</button>
+    </div>
+    <div class="modal-body" style="padding:0;">
+      <iframe id="gl-play-frame" title="GameLab Test Play"></iframe>
+    </div>
+  </div>
+</div>
+
+<!-- Import from Library modal -->
+<div class="modal-backdrop" id="gl-lib-modal">
+  <div class="modal" style="max-width:820px;">
+    <div class="modal-header">
+      <h2>Import from Library</h2>
+      <button class="btn btn-icon" onclick="WVG.closeModal('gl-lib-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <p class="small muted">Copy an existing generated video from the RadicaLab Library into
+        this game project. The file is copied — the original is never modified.</p>
+      <div class="gl-lib-grid" id="gl-lib-grid"></div>
+      <p class="small muted" id="gl-lib-empty" style="display:none;">No Library assets found yet.
+        Generate videos in VideoLab first.</p>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<link rel="stylesheet" href="/static/css/gamelab.css">
+<script src="/static/js/modules/gamelab.js"></script>
+{% endblock %}

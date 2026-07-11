@@ -1,0 +1,45 @@
+{
+  "template": "canvas2d_topdown_racing",
+  "title": "Neon Circuit",
+  "tile_size": 40,
+  "theme": {
+    "road_color": "#3a3a44",
+    "wall_color": "#241f38",
+    "grass_color": "#245a35",
+    "accent_color": "#7c5cfa",
+    "hud_color": "#f4f0ff"
+  },
+  "map": [
+    "###############",
+    "#.............#",
+    "#.............#",
+    "#..#########..#",
+    "#..#########..#",
+    "#..#########..#",
+    "#..#########..#",
+    "#..#########..#",
+    "#.............#",
+    "#.............#",
+    "###############"
+  ],
+  "start": { "col": 4, "row": 1, "heading_deg": 0 },
+  "checkpoints": [
+    { "col": 7, "row": 1 },
+    { "col": 12, "row": 5 },
+    { "col": 7, "row": 9 },
+    { "col": 2, "row": 5 }
+  ],
+  "laps": 2,
+  "car": {
+    "width": 20,
+    "length": 34,
+    "accel": 350,
+    "max_speed": 240,
+    "grass_max_speed": 90,
+    "brake": 480,
+    "turn_rate": 3.2,
+    "friction": 0.7,
+    "color": "#7c5cfa"
+  },
+  "assets": { "base_path": "assets/", "sprites": {} }
+}

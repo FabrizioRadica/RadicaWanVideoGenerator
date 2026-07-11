@@ -1,0 +1,29 @@
+{
+  "template_id": "canvas2d_lane_runner",
+  "name": "Canvas2D Lane Runner",
+  "version": "1.0.0",
+  "engine": "canvas2d",
+  "description": "Reusable, config-driven endless lane runner (Subway Surfers style) with a simple pseudo-3D forward view: fixed lanes converging to a horizon, switch lanes, jump over low obstacles, duck under overhead ones, change lane for full blocks, collect coins, speed ramps, lives and game over. Procedural fallback graphics; standalone browser export.",
+  "entry": "runtime/index.html",
+  "runtime_files": ["runtime/index.html", "runtime/style.css", "runtime/game_runtime.js"],
+  "schema": "schema.json",
+  "examples": ["examples/city_runner.json"],
+  "config_filename": "game_config.json",
+  "capabilities": [
+    "pseudo-3D forward perspective with configurable lanes (2-6)",
+    "lane switching, jump (over low obstacles), duck (under overhead obstacles)",
+    "obstacle types: jump (low), duck (overhead), block (must change lane)",
+    "coins collected in the player's lane",
+    "ramping forward speed",
+    "distance + coin score, lives, respawn invulnerability, game over, restart",
+    "procedural fallback graphics",
+    "standalone export (relative paths, no server calls)"
+  ],
+  "constraints": [
+    "vanilla HTML/CSS/JS only — no Node, npm or frameworks",
+    "configuration-driven: generators produce JSON matching schema.json, never runtime code",
+    "relative asset paths only; missing sprites fall back to procedural drawings",
+    "pseudo-3D is a flat 2D projection — no real 3D, no Three.js"
+  ],
+  "credits": { "concept_and_design": "Fabrizio Radica", "project_by": "RadicaDesign" }
+}

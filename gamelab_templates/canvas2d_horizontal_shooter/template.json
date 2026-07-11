@@ -1,0 +1,34 @@
+{
+  "template_id": "canvas2d_horizontal_shooter",
+  "name": "Canvas2D Horizontal Shooter",
+  "version": "1.0.0",
+  "engine": "canvas2d",
+  "description": "Reusable, config-driven horizontal side-scrolling arcade shooter: keyboard-controlled ship, parallax background layers, enemy formations entering from the right, enemy bullet patterns (straight/aimed/spread), collisions, score, lives, power-ups, game over and restart. Procedural fallback sprites when no assets are mapped. Standalone browser export.",
+  "entry": "runtime/index.html",
+  "runtime_files": ["runtime/index.html", "runtime/style.css", "runtime/game_runtime.js"],
+  "schema": "schema.json",
+  "examples": ["examples/space_horizontal_shooter.json"],
+  "config_filename": "game_config.json",
+  "capabilities": [
+    "horizontal right-to-left scrolling with parallax layers (starfield / color / image)",
+    "keyboard player movement within screen bounds + forward shooting",
+    "named enemy formations: line, column, vee, random",
+    "enemy movement patterns: straight, sine, drift",
+    "enemy bullet patterns: straight, aimed, spread",
+    "AABB collisions with player hitbox scale",
+    "score with kill multiplier and wave-clear bonus",
+    "lives, respawn invulnerability, game over, restart",
+    "power-ups: fire_rate, double_shot, shield, extra_life",
+    "procedural fallback sprites with configurable enemy shape (ship/box/circle/diamond/triangle)",
+    "standalone export (relative paths, no server calls)"
+  ],
+  "constraints": [
+    "vanilla HTML/CSS/JS only — no Node, npm or frameworks",
+    "configuration-driven: generators produce JSON matching schema.json, never runtime code",
+    "relative asset paths only; missing sprites fall back to procedural drawings"
+  ],
+  "credits": {
+    "concept_and_design": "Fabrizio Radica",
+    "project_by": "RadicaDesign"
+  }
+}

@@ -1,0 +1,158 @@
+/* RadicaLab GameLab — exported runtime theme: laserdisc_arcade (v1).
+ * Self-contained; copied verbatim into every exported web build. */
+
+:root {
+  --rg-bg: #0b0b12;
+  --rg-fg: #f4f0ff;
+  --rg-accent: #7c5cfa;
+  --rg-accent-2: #b39cff;
+  --rg-danger: #ff5a6a;
+  --rg-ok: #4ade80;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  height: 100%;
+  background: var(--rg-bg);
+  color: var(--rg-fg);
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+}
+
+.rg-root {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.rg-screen {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 24px;
+}
+
+.rg-media {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #000;
+}
+
+.rg-title {
+  font-size: clamp(28px, 6vw, 64px);
+  letter-spacing: 3px;
+  margin: 0 0 8px;
+  text-shadow: 0 0 18px rgba(124, 92, 250, 0.7);
+}
+.rg-sub { color: var(--rg-accent-2); letter-spacing: 2px; text-transform: uppercase; font-size: 13px; }
+.rg-hint { color: rgba(244, 240, 255, 0.55); font-size: 13px; margin-top: 14px; }
+.rg-name {
+  position: absolute; bottom: 14px; left: 0; right: 0;
+  color: rgba(244, 240, 255, 0.7); font-size: 13px; letter-spacing: 1px;
+}
+
+.rg-btn {
+  margin-top: 18px;
+  background: var(--rg-accent);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 12px 26px;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  cursor: pointer;
+  box-shadow: 0 6px 24px rgba(124, 92, 250, 0.4);
+}
+.rg-btn:hover { background: var(--rg-accent-2); }
+
+/* HUD */
+.rg-hud {
+  position: absolute;
+  top: 14px; left: 14px;
+  display: flex; gap: 12px; align-items: center;
+  z-index: 5;
+}
+.rg-lives {
+  background: rgba(0, 0, 0, 0.55);
+  color: var(--rg-danger);
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+/* Continue prompt (image / no-interaction scenes) */
+.rg-prompt {
+  position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
+  z-index: 5;
+  background: rgba(124, 92, 250, 0.85);
+  color: #fff; padding: 10px 22px; border-radius: 999px;
+  font-weight: 700; cursor: pointer; letter-spacing: 1px;
+  animation: rg-pulse 1.2s infinite;
+}
+
+/* QTE overlay */
+.rg-qte-overlay {
+  position: absolute; inset: 0; z-index: 5;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 14px;
+  background: radial-gradient(circle at center, rgba(0,0,0,0.15), rgba(0,0,0,0.55));
+}
+.rg-qte-key {
+  font-size: clamp(48px, 12vw, 130px);
+  font-weight: 800;
+  color: #fff;
+  min-width: 1.4em;
+  padding: 10px 26px;
+  border: 4px solid var(--rg-accent-2);
+  border-radius: 18px;
+  background: rgba(124, 92, 250, 0.25);
+  text-shadow: 0 0 24px rgba(179, 156, 255, 0.9);
+  animation: rg-pulse 0.7s infinite;
+}
+.rg-qte-instr { letter-spacing: 2px; text-transform: uppercase; color: var(--rg-accent-2); }
+.rg-bar {
+  width: min(60%, 480px);
+  height: 14px;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.rg-bar-fill {
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(90deg, var(--rg-ok), var(--rg-accent-2), var(--rg-danger));
+  transition: width 0.05s linear;
+}
+
+/* Failure banner */
+.rg-banner {
+  position: absolute; z-index: 6;
+  font-size: clamp(24px, 5vw, 52px);
+  font-weight: 800;
+  color: var(--rg-danger);
+  text-shadow: 0 0 20px rgba(255, 90, 106, 0.8);
+  letter-spacing: 2px;
+}
+.rg-over .rg-title { color: var(--rg-danger); text-shadow: 0 0 20px rgba(255,90,106,0.8); }
+.rg-end .rg-title { color: var(--rg-ok); text-shadow: 0 0 20px rgba(74,222,128,0.7); }
+
+@keyframes rg-pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.08); opacity: 0.82; }
+}
+.rg-prompt { transform: translateX(-50%) scale(1); }

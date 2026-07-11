@@ -1,0 +1,24 @@
+{
+  "template": "canvas2d_flappy",
+  "title": "Sky Hopper",
+  "canvas": { "width": 400, "height": 600 },
+  "theme": {
+    "background_color": "#4ec0ff",
+    "ground_color": "#caa66a",
+    "hud_color": "#ffffff",
+    "accent_color": "#ffd24a"
+  },
+  "gravity": 1500,
+  "flap_velocity": 460,
+  "bird": { "width": 34, "height": 26, "x": 110, "color": "#ffd24a" },
+  "pipes": {
+    "gap": 150,
+    "width": 60,
+    "spacing": 220,
+    "speed": 150,
+    "color": "#4ade80"
+  },
+  "lives": 1,
+  "score_per_pipe": 1,
+  "assets": { "base_path": "assets/", "sprites": {} }
+}

@@ -1,0 +1,29 @@
+{
+  "template_id": "canvas2d_maze",
+  "name": "Canvas2D Maze",
+  "version": "1.0.0",
+  "engine": "canvas2d",
+  "description": "Reusable, config-driven top-down maze game: grid map with walls, continuous player movement with wall collision, collectibles, keys and locked doors, patrol/chase enemies, lives, score and level-complete on reaching the exit. Procedural fallback graphics; standalone browser export.",
+  "entry": "runtime/index.html",
+  "runtime_files": ["runtime/index.html", "runtime/style.css", "runtime/game_runtime.js"],
+  "schema": "schema.json",
+  "examples": ["examples/classic_maze.json"],
+  "config_filename": "game_config.json",
+  "capabilities": [
+    "rectangular grid maze from a string map ('#' wall, '.' floor)",
+    "continuous top-down movement with AABB wall collision",
+    "collectibles (score), keys and key-locked doors",
+    "enemies: patrol (bounce) or chase (greedy pursuit)",
+    "lives, respawn invulnerability, game over",
+    "level complete on reaching the exit (optionally requires all collectibles)",
+    "procedural fallback graphics",
+    "standalone export (relative paths, no server calls)"
+  ],
+  "constraints": [
+    "vanilla HTML/CSS/JS only — no Node, npm or frameworks",
+    "configuration-driven: generators produce JSON matching schema.json, never runtime code",
+    "relative asset paths only; missing sprites fall back to procedural drawings",
+    "no procedural maze generation in v1 — the map is JSON-defined"
+  ],
+  "credits": { "concept_and_design": "Fabrizio Radica", "project_by": "RadicaDesign" }
+}

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="generator" content="RadicaLab GameLab — canvas2d_topdown_racing">
+  <title>Top-down Racing — RadicaLab GameLab</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="game-root" class="rg-root"></div>
+  <script src="game_runtime.js"></script>
+  <script>
+    (function () {
+      var root = document.getElementById("game-root");
+      function boot(cfg) { RadicaRacer.mount(root, cfg); }
+      function fail(msg) {
+        var b = document.createElement("div"); b.className = "rg-error";
+        var h = document.createElement("h1"); h.textContent = "No game configuration";
+        var p = document.createElement("p"); p.textContent = msg;
+        b.appendChild(h); b.appendChild(p); root.appendChild(b);
+      }
+      var inline = document.getElementById("rg-config");
+      if (inline) { try { boot(JSON.parse(inline.textContent)); } catch (e) { fail("The inline configuration is not valid JSON."); } return; }
+      function tryFetch(u) { return fetch(u).then(function (r) { if (!r.ok) throw new Error(u); return r.json(); }); }
+      tryFetch("game_config.json")
+        .catch(function () { return tryFetch("../examples/circuit_time_trial.json"); })
+        .then(boot)
+        .catch(function () { fail("Place a game_config.json next to index.html, or serve this folder over HTTP (e.g. `python -m http.server`) to load the bundled example — browsers block fetch() on file:// pages."); });
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,34 @@
+{
+  "template_id": "canvas2d_vertical_shooter",
+  "name": "Canvas2D Vertical Shooter",
+  "version": "1.0.0",
+  "engine": "canvas2d",
+  "description": "Reusable, config-driven vertical scrolling arcade shooter: keyboard-controlled player ship, enemy waves from the top with movement patterns, collisions, score, lives, power-ups, game over and restart. Procedural fallback sprites when no assets are mapped. Standalone browser export.",
+  "entry": "runtime/index.html",
+  "runtime_files": ["runtime/index.html", "runtime/style.css", "runtime/game_runtime.js"],
+  "schema": "schema.json",
+  "examples": ["examples/airplane_vertical_shooter.json"],
+  "config_filename": "game_config.json",
+  "capabilities": [
+    "vertical scrolling background (starfield / color / image)",
+    "keyboard player movement + shooting",
+    "enemy waves with line/column/vee/random formations",
+    "enemy movement patterns: straight, sine, zigzag, dive",
+    "optional enemy fire (straight / aimed)",
+    "AABB collisions with player hitbox scale",
+    "score with kill multiplier and wave-clear bonus",
+    "lives, respawn invulnerability, game over, restart",
+    "power-ups: fire_rate, double_shot, shield, extra_life",
+    "procedural fallback sprites with configurable enemy shape (ship/box/circle/diamond/triangle)",
+    "standalone export (relative paths, no server calls)"
+  ],
+  "constraints": [
+    "vanilla HTML/CSS/JS only — no Node, npm or frameworks",
+    "configuration-driven: generators produce JSON matching schema.json, never runtime code",
+    "relative asset paths only; missing sprites fall back to procedural drawings"
+  ],
+  "credits": {
+    "concept_and_design": "Fabrizio Radica",
+    "project_by": "RadicaDesign"
+  }
+}

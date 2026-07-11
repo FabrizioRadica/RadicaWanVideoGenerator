@@ -1,0 +1,75 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "radicalab://gamelab_templates/canvas2d_maze/schema.json",
+  "title": "GameLab Canvas2D Maze configuration",
+  "type": "object",
+  "required": ["title", "tile_size", "map", "player_spawn", "exit", "lives"],
+  "additionalProperties": false,
+  "properties": {
+    "template": { "const": "canvas2d_maze" },
+    "title": { "type": "string", "minLength": 1, "maxLength": 80 },
+    "tile_size": { "type": "number", "minimum": 8, "maximum": 128 },
+    "theme": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "wall_color": { "type": "string" }, "floor_color": { "type": "string" },
+        "accent_color": { "type": "string" }, "hud_color": { "type": "string" },
+        "exit_color": { "type": "string" }, "collectible_color": { "type": "string" }
+      }
+    },
+    "map": { "type": "array", "minItems": 2, "maxItems": 60, "items": { "type": "string", "minLength": 2, "maxLength": 80 } },
+    "player_spawn": { "$ref": "#/definitions/coord" },
+    "exit": { "$ref": "#/definitions/coord" },
+    "exit_requires_all_collectibles": { "type": "boolean" },
+    "collectibles": { "type": "array", "maxItems": 200, "items": { "$ref": "#/definitions/coord" } },
+    "keys": {
+      "type": "array", "maxItems": 20,
+      "items": {
+        "type": "object", "required": ["id", "col", "row"], "additionalProperties": false,
+        "properties": { "id": { "type": "string", "pattern": "^[a-z0-9_]{1,40}$" },
+          "col": { "type": "number" }, "row": { "type": "number" }, "color": { "type": "string" } }
+      }
+    },
+    "doors": {
+      "type": "array", "maxItems": 40,
+      "items": {
+        "type": "object", "required": ["col", "row"], "additionalProperties": false,
+        "properties": { "key_id": { "type": "string" }, "col": { "type": "number" },
+          "row": { "type": "number" }, "color": { "type": "string" } }
+      }
+    },
+    "enemies": {
+      "type": "array", "maxItems": 40,
+      "items": {
+        "type": "object", "required": ["col", "row", "speed"], "additionalProperties": false,
+        "properties": { "col": { "type": "number" }, "row": { "type": "number" },
+          "behavior": { "enum": ["patrol", "chase"] },
+          "speed": { "type": "number", "exclusiveMinimum": 0, "maximum": 1000 }, "color": { "type": "string" } }
+      }
+    },
+    "player": {
+      "type": "object", "additionalProperties": false,
+      "properties": { "speed": { "type": "number", "exclusiveMinimum": 0, "maximum": 2000 }, "color": { "type": "string" } }
+    },
+    "score": {
+      "type": "object", "additionalProperties": false,
+      "properties": { "collectible": { "type": "number", "minimum": 0, "maximum": 100000 } }
+    },
+    "lives": { "type": "number", "minimum": 1, "maximum": 99 },
+    "assets": {
+      "type": "object", "additionalProperties": false,
+      "properties": {
+        "base_path": { "type": "string", "pattern": "^(?!/)(?!.*\\.\\.).*$" },
+        "sprites": { "type": "object", "description": "Keys: player, enemy. Relative paths only; missing sprites fall back to procedural drawings.",
+          "additionalProperties": { "type": "string", "pattern": "^(?!/)(?!.*\\.\\.).*$" } }
+      }
+    }
+  },
+  "definitions": {
+    "coord": {
+      "type": "object", "required": ["col", "row"], "additionalProperties": false,
+      "properties": { "col": { "type": "number", "minimum": 0 }, "row": { "type": "number", "minimum": 0 } }
+    }
+  }
+}

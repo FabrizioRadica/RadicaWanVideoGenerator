@@ -1,0 +1,100 @@
+{
+  "template": "canvas2d_horizontal_shooter",
+  "title": "Nebula Runner",
+  "canvas": { "width": 800, "height": 450 },
+  "theme": {
+    "background_color": "#060614",
+    "hud_color": "#f4f0ff",
+    "accent_color": "#7c5cfa"
+  },
+  "background": {
+    "layers": [
+      { "type": "color", "color": "#0d1330" },
+      { "type": "starfield", "speed": 22, "density": 40, "color": "#6d7aa8" },
+      { "type": "starfield", "speed": 65, "density": 55, "color": "#cfe6ff" }
+    ]
+  },
+  "player": {
+    "width": 42,
+    "height": 30,
+    "speed": 260,
+    "fire_rate": 6,
+    "hitbox_scale": 0.72,
+    "color": "#7c5cfa",
+    "sprite": null
+  },
+  "bullets": {
+    "player": { "speed": 540, "width": 12, "height": 4, "damage": 1, "color": "#b39cff" },
+    "enemy": { "speed": 200, "width": 8, "height": 8, "color": "#ffb03a" }
+  },
+  "enemies": [
+    {
+      "id": "fighter",
+      "hp": 1,
+      "speed": 130,
+      "width": 32,
+      "height": 24,
+      "score": 100,
+      "movement": "straight",
+      "color": "#ff5a6a",
+      "fire": { "enabled": true, "rate": 0.4, "pattern": "straight" }
+    },
+    {
+      "id": "waver",
+      "hp": 1,
+      "speed": 105,
+      "width": 28,
+      "height": 26,
+      "score": 150,
+      "movement": "sine",
+      "color": "#ffb03a",
+      "fire": { "enabled": false }
+    },
+    {
+      "id": "hunter",
+      "hp": 2,
+      "speed": 95,
+      "width": 30,
+      "height": 28,
+      "score": 250,
+      "movement": "drift",
+      "color": "#ff7ad0",
+      "fire": { "enabled": true, "rate": 0.5, "pattern": "aimed" }
+    },
+    {
+      "id": "gunship",
+      "hp": 4,
+      "speed": 55,
+      "width": 52,
+      "height": 40,
+      "score": 500,
+      "movement": "sine",
+      "color": "#c04ae2",
+      "fire": { "enabled": true, "rate": 0.45, "pattern": "spread" }
+    }
+  ],
+  "formations": [
+    { "id": "wall", "arrangement": "line", "spacing": 44 },
+    { "id": "convoy", "arrangement": "column", "spacing": 52 },
+    { "id": "arrow", "arrangement": "vee", "spacing": 40 },
+    { "id": "scatter", "arrangement": "random" }
+  ],
+  "waves": [
+    { "enemy_id": "fighter", "formation_id": "wall", "count": 4, "interval": 0.35, "start_delay": 1.2, "y_spread": 0.75 },
+    { "enemy_id": "waver", "formation_id": "convoy", "count": 5, "interval": 0.45, "start_delay": 1.0, "y_spread": 0.7 },
+    { "enemy_id": "fighter", "formation_id": "arrow", "count": 5, "interval": 0.25, "start_delay": 1.0, "y_spread": 0.8 },
+    { "enemy_id": "hunter", "formation_id": "scatter", "count": 3, "interval": 0.9, "start_delay": 1.2, "y_spread": 0.85 },
+    { "enemy_id": "gunship", "formation_id": "wall", "count": 2, "interval": 1.6, "start_delay": 1.6, "y_spread": 0.5 },
+    { "enemy_id": "waver", "formation_id": "arrow", "count": 7, "interval": 0.3, "start_delay": 1.0, "y_spread": 0.85 }
+  ],
+  "powerups": [
+    { "id": "rapid", "effect": "fire_rate", "multiplier": 1.9, "duration": 7, "drop_chance": 0.09, "color": "#4ade80" },
+    { "id": "twin", "effect": "double_shot", "duration": 8, "drop_chance": 0.07, "color": "#5ac8fa" },
+    { "id": "aegis", "effect": "shield", "duration": 5, "drop_chance": 0.05, "color": "#ffd27a" },
+    { "id": "life", "effect": "extra_life", "drop_chance": 0.02, "color": "#ff5a6a" }
+  ],
+  "score": { "kill_multiplier": 1.0, "wave_clear_bonus": 300 },
+  "lives": 3,
+  "difficulty": { "speed_multiplier": 1.0, "hp_multiplier": 1.0, "wave_speedup": 0.06 },
+  "assets": { "base_path": "assets/", "sprites": {} }
+}

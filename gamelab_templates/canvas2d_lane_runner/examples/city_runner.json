@@ -1,0 +1,28 @@
+{
+  "template": "canvas2d_lane_runner",
+  "title": "Neon Sprint",
+  "canvas": { "width": 480, "height": 640 },
+  "theme": {
+    "sky_color": "#1a2340",
+    "ground_color": "#12331f",
+    "road_color": "#33333f",
+    "lane_color": "rgba(255,255,255,0.35)",
+    "accent_color": "#7c5cfa",
+    "hud_color": "#f4f0ff",
+    "coin_color": "#ffd24a"
+  },
+  "lanes": 3,
+  "draw_distance": 900,
+  "player": { "width": 40, "height": 64, "color": "#7c5cfa", "jump_duration": 0.6, "duck_duration": 0.5 },
+  "speed": { "base": 320, "ramp": 12, "max": 780 },
+  "obstacles": [
+    { "id": "hurdle", "type": "jump", "width": 80, "color": "#ff5a6a" },
+    { "id": "beam", "type": "duck", "width": 96, "color": "#5ac8fa" },
+    { "id": "wall", "type": "block", "width": 84, "color": "#ffb03a" }
+  ],
+  "spawn": { "interval_distance": 300, "obstacle_chance": 0.8, "coin_chance": 0.6 },
+  "coins": { "value": 10, "color": "#ffd24a" },
+  "lives": 3,
+  "score": { "distance_per_unit": 0.05 },
+  "assets": { "base_path": "assets/", "sprites": {} }
+}

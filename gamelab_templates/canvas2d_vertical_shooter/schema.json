@@ -1,0 +1,190 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "radicalab://gamelab_templates/canvas2d_vertical_shooter/schema.json",
+  "title": "GameLab Canvas2D Vertical Shooter configuration",
+  "type": "object",
+  "required": ["title", "canvas", "player", "bullets", "enemies", "waves", "lives"],
+  "additionalProperties": false,
+  "properties": {
+    "template": { "const": "canvas2d_vertical_shooter" },
+    "title": { "type": "string", "minLength": 1, "maxLength": 80 },
+    "canvas": {
+      "type": "object",
+      "required": ["width", "height"],
+      "additionalProperties": false,
+      "properties": {
+        "width": { "type": "number", "minimum": 160, "maximum": 1920 },
+        "height": { "type": "number", "minimum": 160, "maximum": 1920 }
+      }
+    },
+    "theme": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "background_color": { "type": "string" },
+        "hud_color": { "type": "string" },
+        "accent_color": { "type": "string" }
+      }
+    },
+    "background": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "type": { "enum": ["starfield", "color", "image"] },
+        "speed": { "type": "number", "minimum": 0, "maximum": 2000 },
+        "density": { "type": "number", "minimum": 0, "maximum": 400 },
+        "color": { "type": "string" }
+      }
+    },
+    "player": {
+      "type": "object",
+      "required": ["width", "height", "speed", "fire_rate"],
+      "additionalProperties": false,
+      "properties": {
+        "width": { "type": "number", "exclusiveMinimum": 0, "maximum": 200 },
+        "height": { "type": "number", "exclusiveMinimum": 0, "maximum": 200 },
+        "speed": { "type": "number", "exclusiveMinimum": 0, "maximum": 2000 },
+        "fire_rate": { "type": "number", "exclusiveMinimum": 0, "maximum": 30 },
+        "hitbox_scale": { "type": "number", "exclusiveMinimum": 0, "maximum": 1 },
+        "color": { "type": "string" },
+        "sprite": { "type": ["string", "null"] }
+      }
+    },
+    "bullets": {
+      "type": "object",
+      "required": ["player"],
+      "additionalProperties": false,
+      "properties": {
+        "player": { "$ref": "#/definitions/bullet_def" },
+        "enemy": { "$ref": "#/definitions/enemy_bullet_def" }
+      }
+    },
+    "enemies": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 30,
+      "items": {
+        "type": "object",
+        "required": ["id", "hp", "speed", "width", "height", "score"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z0-9_]{1,40}$" },
+          "hp": { "type": "number", "exclusiveMinimum": 0, "maximum": 999 },
+          "speed": { "type": "number", "exclusiveMinimum": 0, "maximum": 2000 },
+          "width": { "type": "number", "exclusiveMinimum": 0, "maximum": 300 },
+          "height": { "type": "number", "exclusiveMinimum": 0, "maximum": 300 },
+          "score": { "type": "number", "minimum": 0, "maximum": 100000 },
+          "movement": { "enum": ["straight", "sine", "zigzag", "dive"] },
+          "shape": {
+            "enum": ["ship", "box", "circle", "diamond", "triangle"],
+            "description": "Procedural fallback geometry when no sprite is mapped. Omit for the default ship look."
+          },
+          "color": { "type": "string" },
+          "sprite": { "type": ["string", "null"] },
+          "fire": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "enabled": { "type": "boolean" },
+              "rate": { "type": "number", "exclusiveMinimum": 0, "maximum": 10 },
+              "pattern": { "enum": ["straight", "aimed"] }
+            }
+          }
+        }
+      }
+    },
+    "waves": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 60,
+      "items": {
+        "type": "object",
+        "required": ["enemy_id", "count"],
+        "additionalProperties": false,
+        "properties": {
+          "enemy_id": { "type": "string" },
+          "count": { "type": "number", "minimum": 1, "maximum": 100 },
+          "formation": { "enum": ["line", "column", "vee", "random"] },
+          "interval": { "type": "number", "minimum": 0, "maximum": 30 },
+          "start_delay": { "type": "number", "minimum": 0, "maximum": 60 },
+          "x_spread": { "type": "number", "exclusiveMinimum": 0, "maximum": 1 }
+        }
+      }
+    },
+    "powerups": {
+      "type": "array",
+      "maxItems": 12,
+      "items": {
+        "type": "object",
+        "required": ["id", "effect", "drop_chance"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z0-9_]{1,40}$" },
+          "effect": { "enum": ["fire_rate", "double_shot", "shield", "extra_life"] },
+          "multiplier": { "type": "number", "exclusiveMinimum": 0, "maximum": 10 },
+          "duration": { "type": "number", "exclusiveMinimum": 0, "maximum": 120 },
+          "drop_chance": { "type": "number", "minimum": 0, "maximum": 1 },
+          "color": { "type": "string" },
+          "sprite": { "type": ["string", "null"] }
+        }
+      }
+    },
+    "score": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "kill_multiplier": { "type": "number", "minimum": 0, "maximum": 100 },
+        "wave_clear_bonus": { "type": "number", "minimum": 0, "maximum": 100000 }
+      }
+    },
+    "lives": { "type": "number", "minimum": 1, "maximum": 99 },
+    "difficulty": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "speed_multiplier": { "type": "number", "exclusiveMinimum": 0, "maximum": 10 },
+        "hp_multiplier": { "type": "number", "exclusiveMinimum": 0, "maximum": 10 },
+        "wave_speedup": { "type": "number", "minimum": 0, "maximum": 2 }
+      }
+    },
+    "assets": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "base_path": { "type": "string", "pattern": "^(?!/)(?!.*\\.\\.).*$" },
+        "sprites": {
+          "type": "object",
+          "description": "Keys: player, background, bullet_player, bullet_enemy, enemy_<id>, powerup_<id>. Values: RELATIVE paths under base_path. Missing/unloadable sprites fall back to procedural drawings.",
+          "additionalProperties": { "type": "string", "pattern": "^(?!/)(?!.*\\.\\.).*$" }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "bullet_def": {
+      "type": "object",
+      "required": ["speed", "width", "height", "damage"],
+      "additionalProperties": false,
+      "properties": {
+        "speed": { "type": "number", "exclusiveMinimum": 0, "maximum": 3000 },
+        "width": { "type": "number", "exclusiveMinimum": 0, "maximum": 100 },
+        "height": { "type": "number", "exclusiveMinimum": 0, "maximum": 100 },
+        "damage": { "type": "number", "exclusiveMinimum": 0, "maximum": 999 },
+        "color": { "type": "string" },
+        "sprite": { "type": ["string", "null"] }
+      }
+    },
+    "enemy_bullet_def": {
+      "type": "object",
+      "required": ["speed", "width", "height"],
+      "additionalProperties": false,
+      "properties": {
+        "speed": { "type": "number", "exclusiveMinimum": 0, "maximum": 3000 },
+        "width": { "type": "number", "exclusiveMinimum": 0, "maximum": 100 },
+        "height": { "type": "number", "exclusiveMinimum": 0, "maximum": 100 },
+        "color": { "type": "string" },
+        "sprite": { "type": ["string", "null"] }
+      }
+    }
+  }
+}

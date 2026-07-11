@@ -1,0 +1,88 @@
+{
+  "template": "canvas2d_vertical_shooter",
+  "title": "Sky Raiders",
+  "canvas": { "width": 480, "height": 640 },
+  "theme": {
+    "background_color": "#071022",
+    "hud_color": "#f4f0ff",
+    "accent_color": "#7c5cfa"
+  },
+  "background": { "type": "starfield", "speed": 70, "density": 70, "color": "#cfe6ff" },
+  "player": {
+    "width": 36,
+    "height": 40,
+    "speed": 270,
+    "fire_rate": 6,
+    "hitbox_scale": 0.75,
+    "color": "#7c5cfa",
+    "sprite": null
+  },
+  "bullets": {
+    "player": { "speed": 500, "width": 4, "height": 14, "damage": 1, "color": "#b39cff" },
+    "enemy": { "speed": 210, "width": 6, "height": 10, "color": "#ffb03a" }
+  },
+  "enemies": [
+    {
+      "id": "scout",
+      "hp": 1,
+      "speed": 110,
+      "width": 30,
+      "height": 28,
+      "score": 100,
+      "movement": "straight",
+      "color": "#ff5a6a",
+      "fire": { "enabled": false }
+    },
+    {
+      "id": "zigzagger",
+      "hp": 1,
+      "speed": 95,
+      "width": 30,
+      "height": 26,
+      "score": 150,
+      "movement": "zigzag",
+      "color": "#ffb03a",
+      "fire": { "enabled": false }
+    },
+    {
+      "id": "diver",
+      "hp": 1,
+      "speed": 120,
+      "width": 26,
+      "height": 30,
+      "score": 200,
+      "movement": "dive",
+      "color": "#ff7ad0",
+      "fire": { "enabled": false }
+    },
+    {
+      "id": "heavy",
+      "hp": 3,
+      "speed": 60,
+      "width": 44,
+      "height": 38,
+      "score": 400,
+      "movement": "sine",
+      "color": "#c04ae2",
+      "fire": { "enabled": true, "rate": 0.5, "pattern": "aimed" }
+    }
+  ],
+  "waves": [
+    { "enemy_id": "scout", "count": 5, "formation": "line", "interval": 0.35, "start_delay": 1.2, "x_spread": 0.8 },
+    { "enemy_id": "zigzagger", "count": 4, "formation": "random", "interval": 0.5, "start_delay": 1.0, "x_spread": 0.9 },
+    { "enemy_id": "scout", "count": 7, "formation": "vee", "interval": 0.25, "start_delay": 1.0, "x_spread": 0.85 },
+    { "enemy_id": "diver", "count": 4, "formation": "random", "interval": 0.7, "start_delay": 1.0, "x_spread": 0.9 },
+    { "enemy_id": "heavy", "count": 2, "formation": "line", "interval": 1.4, "start_delay": 1.5, "x_spread": 0.5 },
+    { "enemy_id": "zigzagger", "count": 6, "formation": "column", "interval": 0.4, "start_delay": 1.0, "x_spread": 0.8 }
+  ],
+  "powerups": [
+    { "id": "rapid", "effect": "fire_rate", "multiplier": 1.9, "duration": 7, "drop_chance": 0.09, "color": "#4ade80" },
+    { "id": "twin", "effect": "double_shot", "duration": 8, "drop_chance": 0.07, "color": "#5ac8fa" },
+    { "id": "aegis", "effect": "shield", "duration": 5, "drop_chance": 0.05, "color": "#ffd27a" },
+    { "id": "life", "effect": "extra_life", "drop_chance": 0.02, "color": "#ff5a6a" }
+  ],
+  "score": { "kill_multiplier": 1.0, "wave_clear_bonus": 250 },
+  "lives": 3,
+  "difficulty": { "speed_multiplier": 1.0, "hp_multiplier": 1.0, "wave_speedup": 0.06 },
+  "assets": { "base_path": "assets/", "sprites": {} }
+}

@@ -1,0 +1,28 @@
+{
+  "template_id": "canvas2d_flappy",
+  "name": "Canvas2D Flappy",
+  "version": "1.0.0",
+  "engine": "canvas2d",
+  "description": "Reusable, config-driven 'flap through the gaps' arcade game (Flappy Bird style): gravity + tap-to-flap physics, scrolling pipe pairs with a gap, score per pipe passed, collision with pipes/ground/ceiling ends the run, optional multiple lives. Procedural fallback graphics; standalone browser export.",
+  "entry": "runtime/index.html",
+  "runtime_files": ["runtime/index.html", "runtime/style.css", "runtime/game_runtime.js"],
+  "schema": "schema.json",
+  "examples": ["examples/classic_flappy.json"],
+  "config_filename": "game_config.json",
+  "capabilities": [
+    "gravity + impulse flap physics",
+    "endless scrolling pipe pairs with a configurable gap and spacing",
+    "score per pipe passed",
+    "collision with pipes, ground and ceiling ends the run",
+    "optional multiple lives with respawn",
+    "tap to flap: Space / ArrowUp / Enter / click",
+    "procedural fallback graphics",
+    "standalone export (relative paths, no server calls)"
+  ],
+  "constraints": [
+    "vanilla HTML/CSS/JS only — no Node, npm or frameworks",
+    "configuration-driven: generators produce JSON matching schema.json, never runtime code",
+    "relative asset paths only; missing sprites fall back to procedural drawings"
+  ],
+  "credits": { "concept_and_design": "Fabrizio Radica", "project_by": "RadicaDesign" }
+}

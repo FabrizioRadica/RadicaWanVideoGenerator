@@ -1,0 +1,27 @@
+{
+  "template": "canvas2d_endless_topdown",
+  "title": "Highway Dash",
+  "canvas": { "width": 480, "height": 640 },
+  "theme": {
+    "background_color": "#0e1424",
+    "line_color": "rgba(255,255,255,0.09)",
+    "accent_color": "#7c5cfa",
+    "hud_color": "#f4f0ff"
+  },
+  "player": { "width": 34, "height": 42, "speed": 300, "hitbox_scale": 0.72, "color": "#7c5cfa" },
+  "scroll": { "speed": 220 },
+  "obstacles": [
+    { "id": "car", "width": 38, "height": 46, "color": "#ff5a6a", "speed_bonus": 60 },
+    { "id": "truck", "width": 46, "height": 74, "color": "#ffb03a", "speed_bonus": 0 },
+    { "id": "cone", "width": 20, "height": 24, "color": "#ff7ad0", "speed_bonus": 30 }
+  ],
+  "spawn": { "interval": 0.9, "min_interval": 0.35 },
+  "pickups": [
+    { "id": "coin", "size": 12, "effect": "score", "score": 150, "color": "#ffd24a", "spawn_interval": 5 },
+    { "id": "heart", "size": 13, "effect": "extra_life", "color": "#ff5a6a", "spawn_interval": 22 }
+  ],
+  "lives": 3,
+  "score": { "distance_per_second": 12 },
+  "difficulty": { "ramp": 0.03, "max_ramp": 4 },
+  "assets": { "base_path": "assets/", "sprites": {} }
+}

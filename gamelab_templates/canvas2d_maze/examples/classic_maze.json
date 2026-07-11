@@ -1,0 +1,49 @@
+{
+  "template": "canvas2d_maze",
+  "title": "Crypt Escape",
+  "tile_size": 32,
+  "theme": {
+    "wall_color": "#3a2f6e",
+    "floor_color": "#141225",
+    "accent_color": "#7c5cfa",
+    "hud_color": "#f4f0ff",
+    "exit_color": "#4ade80",
+    "collectible_color": "#ffd27a"
+  },
+  "map": [
+    "###############",
+    "#P....#.....C.#",
+    "#.###.#.###.#.#",
+    "#.#...#...#.#.#",
+    "#.#.#####.#.#.#",
+    "#...#...#...#.#",
+    "###.#.#.#####.#",
+    "#C..#.#....K#.#",
+    "#.###.#.###.#.#",
+    "#.....#...#...#",
+    "#.#######D###.#",
+    "#...........E.#",
+    "###############"
+  ],
+  "player_spawn": { "col": 1, "row": 1 },
+  "exit": { "col": 12, "row": 11 },
+  "exit_requires_all_collectibles": false,
+  "collectibles": [
+    { "col": 12, "row": 1 },
+    { "col": 1, "row": 7 }
+  ],
+  "keys": [
+    { "id": "bronze", "col": 11, "row": 7, "color": "#ffb03a" }
+  ],
+  "doors": [
+    { "key_id": "bronze", "col": 9, "row": 10, "color": "#c08a2e" }
+  ],
+  "enemies": [
+    { "col": 7, "row": 5, "behavior": "chase", "speed": 70, "color": "#ff5a6a" },
+    { "col": 3, "row": 9, "behavior": "patrol", "speed": 90, "color": "#ff7ad0" }
+  ],
+  "player": { "speed": 130, "color": "#7c5cfa" },
+  "score": { "collectible": 100 },
+  "lives": 3,
+  "assets": { "base_path": "assets/", "sprites": {} }
+}

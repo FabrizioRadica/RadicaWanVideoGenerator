@@ -1,0 +1,29 @@
+{
+  "template_id": "canvas2d_roguelike",
+  "name": "Canvas2D Rogue-like",
+  "version": "1.0.0",
+  "engine": "canvas2d",
+  "description": "Reusable, config-driven turn-based top-down rogue-like: JSON-defined room map, one step per key press with a matching enemy turn, bump-to-attack melee combat, HP, treasure (score), health potions, keys and key-locked doors, win on reaching the exit. Procedural fallback graphics; standalone browser export.",
+  "entry": "runtime/index.html",
+  "runtime_files": ["runtime/index.html", "runtime/style.css", "runtime/game_runtime.js"],
+  "schema": "schema.json",
+  "examples": ["examples/dungeon_roguelike.json"],
+  "config_filename": "game_config.json",
+  "capabilities": [
+    "turn-based grid movement (player step -> enemy step)",
+    "JSON-defined room/corridor map ('#' wall, '.' floor)",
+    "bump-to-attack melee combat with per-enemy HP and damage",
+    "treasure (score), health potions, keys and key-locked doors",
+    "enemy behaviors: wander, chase (with sight range)",
+    "player HP, death (game over), win on reaching the exit",
+    "procedural fallback graphics",
+    "standalone export (relative paths, no server calls)"
+  ],
+  "constraints": [
+    "vanilla HTML/CSS/JS only — no Node, npm or frameworks",
+    "configuration-driven: generators produce JSON matching schema.json, never runtime code",
+    "relative asset paths only; missing sprites fall back to procedural drawings",
+    "no procedural dungeon generation in v1 — the map is JSON-defined"
+  ],
+  "credits": { "concept_and_design": "Fabrizio Radica", "project_by": "RadicaDesign" }
+}

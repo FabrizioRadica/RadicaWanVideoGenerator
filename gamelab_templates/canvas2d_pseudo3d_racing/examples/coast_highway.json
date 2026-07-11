@@ -1,0 +1,51 @@
+{
+  "template": "canvas2d_pseudo3d_racing",
+  "title": "Coast Highway",
+  "canvas": { "width": 640, "height": 400 },
+  "theme": {
+    "sky_color": "#5aa0d8",
+    "grass_light": "#3aa050",
+    "grass_dark": "#2e8a44",
+    "rumble_light": "#e8e8e8",
+    "rumble_dark": "#c04040",
+    "road_light": "#4a4a52",
+    "road_dark": "#43434b",
+    "lane_marker": "rgba(255,255,255,0.6)",
+    "accent_color": "#ffd24a",
+    "hud_color": "#ffffff",
+    "traffic_color": "#ffb03a"
+  },
+  "road": {
+    "segment_length": 200,
+    "rumble_segments": 4,
+    "road_width": 2000,
+    "lanes": 3,
+    "draw_distance": 160,
+    "fov": 100,
+    "camera_height": 1000
+  },
+  "car": {
+    "max_speed": 12000,
+    "accel": 2600,
+    "brake": 12000,
+    "decel": 2200,
+    "off_road_decel": 6000,
+    "off_road_limit": 3000,
+    "centrifugal": 0.32,
+    "steer": 2.2,
+    "color": "#e23a3a"
+  },
+  "track": [
+    { "length": 30, "curve": 0, "hill": 0 },
+    { "length": 40, "curve": 3, "hill": 0 },
+    { "length": 30, "curve": 0, "hill": 1200 },
+    { "length": 40, "curve": -4, "hill": 0 },
+    { "length": 30, "curve": 0, "hill": -1200 },
+    { "length": 40, "curve": 5, "hill": 800 },
+    { "length": 20, "curve": -2, "hill": 0 },
+    { "length": 30, "curve": 0, "hill": 0 }
+  ],
+  "laps": 2,
+  "traffic": { "count": 8, "speed_factor": 0.45 },
+  "assets": { "base_path": "assets/", "sprites": {} }
+}

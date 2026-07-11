@@ -1,0 +1,29 @@
+{
+  "template_id": "canvas2d_endless_topdown",
+  "name": "Canvas2D Endless Top-down",
+  "version": "1.0.0",
+  "engine": "canvas2d",
+  "description": "Reusable, config-driven endless top-down survival/dodger: the world scrolls downward, the player moves freely in 2D to dodge obstacles and grab pickups, score grows with distance survived plus pickups, difficulty ramps over time, lives and game over. No shooting. Procedural fallback graphics; standalone browser export.",
+  "entry": "runtime/index.html",
+  "runtime_files": ["runtime/index.html", "runtime/style.css", "runtime/game_runtime.js"],
+  "schema": "schema.json",
+  "examples": ["examples/highway_dodge.json"],
+  "config_filename": "game_config.json",
+  "capabilities": [
+    "downward-scrolling endless world",
+    "free 2D keyboard movement within the screen (dodge-only, no shooting)",
+    "obstacle types spawned at a ramping rate, with optional per-type speed bonus",
+    "pickups: score bonuses and extra_life",
+    "score from distance survived plus pickups",
+    "difficulty ramp (scroll speed + spawn rate) with an optional cap",
+    "lives, respawn invulnerability, game over, restart",
+    "procedural fallback graphics",
+    "standalone export (relative paths, no server calls)"
+  ],
+  "constraints": [
+    "vanilla HTML/CSS/JS only — no Node, npm or frameworks",
+    "configuration-driven: generators produce JSON matching schema.json, never runtime code",
+    "relative asset paths only; missing sprites fall back to procedural drawings"
+  ],
+  "credits": { "concept_and_design": "Fabrizio Radica", "project_by": "RadicaDesign" }
+}

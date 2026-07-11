@@ -1,0 +1,51 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "radicalab://gamelab_templates/canvas2d_flappy/schema.json",
+  "title": "GameLab Canvas2D Flappy configuration",
+  "type": "object",
+  "required": ["title", "canvas", "gravity", "flap_velocity", "bird", "pipes"],
+  "additionalProperties": false,
+  "properties": {
+    "template": { "const": "canvas2d_flappy" },
+    "title": { "type": "string", "minLength": 1, "maxLength": 80 },
+    "canvas": {
+      "type": "object", "required": ["width", "height"], "additionalProperties": false,
+      "properties": { "width": { "type": "number", "minimum": 160, "maximum": 1920 }, "height": { "type": "number", "minimum": 160, "maximum": 1920 } }
+    },
+    "theme": {
+      "type": "object", "additionalProperties": false,
+      "properties": { "background_color": { "type": "string" }, "ground_color": { "type": "string" },
+        "hud_color": { "type": "string" }, "accent_color": { "type": "string" } }
+    },
+    "gravity": { "type": "number", "exclusiveMinimum": 0, "maximum": 10000 },
+    "flap_velocity": { "type": "number", "exclusiveMinimum": 0, "maximum": 5000 },
+    "bird": {
+      "type": "object", "required": ["width", "height"], "additionalProperties": false,
+      "properties": {
+        "width": { "type": "number", "exclusiveMinimum": 0, "maximum": 400 },
+        "height": { "type": "number", "exclusiveMinimum": 0, "maximum": 400 },
+        "x": { "type": "number", "minimum": 0, "maximum": 1920 }, "color": { "type": "string" }
+      }
+    },
+    "pipes": {
+      "type": "object", "required": ["gap", "width", "spacing", "speed"], "additionalProperties": false,
+      "properties": {
+        "gap": { "type": "number", "exclusiveMinimum": 0, "maximum": 1920 },
+        "width": { "type": "number", "exclusiveMinimum": 0, "maximum": 400 },
+        "spacing": { "type": "number", "exclusiveMinimum": 0, "maximum": 4000 },
+        "speed": { "type": "number", "exclusiveMinimum": 0, "maximum": 2000 },
+        "color": { "type": "string" }
+      }
+    },
+    "lives": { "type": "number", "minimum": 1, "maximum": 99 },
+    "score_per_pipe": { "type": "number", "minimum": 0, "maximum": 100000 },
+    "assets": {
+      "type": "object", "additionalProperties": false,
+      "properties": {
+        "base_path": { "type": "string", "pattern": "^(?!/)(?!.*\\.\\.).*$" },
+        "sprites": { "type": "object", "description": "Keys: bird, pipe, background. Relative paths only; missing sprites fall back to procedural drawings.",
+          "additionalProperties": { "type": "string", "pattern": "^(?!/)(?!.*\\.\\.).*$" } }
+      }
+    }
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "template_id": "canvas2d_pseudo3d_racing",
+  "name": "Canvas2D Pseudo-3D Racing",
+  "version": "1.0.0",
+  "engine": "canvas2d",
+  "description": "Reusable, config-driven pseudo-3D road racer (OutRun style) using the classic projected-road-segment technique: a track of straight/curve/hill sections built into z-segments and projected each frame from a chase camera to fake 3D on a flat 2D canvas (no real 3D, no Three.js). Race the laps against the clock; grass off-road slows you; optional light traffic to weave through. Procedural fallback graphics; standalone browser export.",
+  "entry": "runtime/index.html",
+  "runtime_files": ["runtime/index.html", "runtime/style.css", "runtime/game_runtime.js"],
+  "schema": "schema.json",
+  "examples": ["examples/coast_highway.json"],
+  "config_filename": "game_config.json",
+  "capabilities": [
+    "classic pseudo-3D projected road segments (curves + hills)",
+    "chase-camera projection with configurable fov, camera height and draw distance",
+    "car physics: accelerate, brake, speed-scaled steering, centrifugal push on curves",
+    "off-road grass caps and bleeds speed",
+    "multi-lap racing with lap timer and best-lap tracking",
+    "optional simple traffic to weave through (rear-end slows you)",
+    "procedural fallback graphics",
+    "standalone export (relative paths, no server calls)"
+  ],
+  "constraints": [
+    "vanilla HTML/CSS/JS only — no Node, npm or frameworks",
+    "configuration-driven: generators produce JSON matching schema.json, never runtime code",
+    "relative asset paths only; missing sprites fall back to procedural drawings",
+    "pseudo-3D is a flat 2D projection — no real 3D, no Three.js; no branching routes in v1"
+  ],
+  "credits": { "concept_and_design": "Fabrizio Radica", "project_by": "RadicaDesign" }
+}

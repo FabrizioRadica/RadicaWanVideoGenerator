@@ -1,0 +1,70 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "radicalab://gamelab_templates/canvas2d_lane_runner/schema.json",
+  "title": "GameLab Canvas2D Lane Runner configuration",
+  "type": "object",
+  "required": ["title", "canvas", "lanes", "player", "speed", "obstacles", "spawn", "lives"],
+  "additionalProperties": false,
+  "properties": {
+    "template": { "const": "canvas2d_lane_runner" },
+    "title": { "type": "string", "minLength": 1, "maxLength": 80 },
+    "canvas": {
+      "type": "object", "required": ["width", "height"], "additionalProperties": false,
+      "properties": { "width": { "type": "number", "minimum": 160, "maximum": 1920 }, "height": { "type": "number", "minimum": 160, "maximum": 1920 } }
+    },
+    "theme": {
+      "type": "object", "additionalProperties": false,
+      "properties": { "sky_color": { "type": "string" }, "ground_color": { "type": "string" }, "road_color": { "type": "string" },
+        "lane_color": { "type": "string" }, "accent_color": { "type": "string" }, "hud_color": { "type": "string" }, "coin_color": { "type": "string" } }
+    },
+    "lanes": { "type": "number", "minimum": 2, "maximum": 6 },
+    "draw_distance": { "type": "number", "minimum": 200, "maximum": 5000 },
+    "player": {
+      "type": "object", "required": ["width", "height"], "additionalProperties": false,
+      "properties": {
+        "width": { "type": "number", "exclusiveMinimum": 0, "maximum": 400 },
+        "height": { "type": "number", "exclusiveMinimum": 0, "maximum": 400 },
+        "jump_duration": { "type": "number", "exclusiveMinimum": 0, "maximum": 5 },
+        "duck_duration": { "type": "number", "exclusiveMinimum": 0, "maximum": 5 }, "color": { "type": "string" }
+      }
+    },
+    "speed": {
+      "type": "object", "required": ["base"], "additionalProperties": false,
+      "properties": { "base": { "type": "number", "exclusiveMinimum": 0, "maximum": 5000 },
+        "ramp": { "type": "number", "minimum": 0, "maximum": 1000 }, "max": { "type": "number", "exclusiveMinimum": 0, "maximum": 8000 } }
+    },
+    "obstacles": {
+      "type": "array", "minItems": 1, "maxItems": 20,
+      "items": {
+        "type": "object", "required": ["id", "type"], "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z0-9_]{1,40}$" },
+          "type": { "enum": ["jump", "duck", "block"] },
+          "width": { "type": "number", "exclusiveMinimum": 0, "maximum": 400 }, "color": { "type": "string" }
+        }
+      }
+    },
+    "spawn": {
+      "type": "object", "required": ["interval_distance"], "additionalProperties": false,
+      "properties": { "interval_distance": { "type": "number", "exclusiveMinimum": 0, "maximum": 5000 },
+        "obstacle_chance": { "type": "number", "minimum": 0, "maximum": 1 }, "coin_chance": { "type": "number", "minimum": 0, "maximum": 1 } }
+    },
+    "coins": {
+      "type": "object", "additionalProperties": false,
+      "properties": { "value": { "type": "number", "minimum": 0, "maximum": 100000 }, "color": { "type": "string" } }
+    },
+    "lives": { "type": "number", "minimum": 1, "maximum": 99 },
+    "score": {
+      "type": "object", "additionalProperties": false,
+      "properties": { "distance_per_unit": { "type": "number", "minimum": 0, "maximum": 1000 } }
+    },
+    "assets": {
+      "type": "object", "additionalProperties": false,
+      "properties": {
+        "base_path": { "type": "string", "pattern": "^(?!/)(?!.*\\.\\.).*$" },
+        "sprites": { "type": "object", "description": "Keys: player, coin, obstacle_<id>. Relative paths only; missing sprites fall back to procedural drawings.",
+          "additionalProperties": { "type": "string", "pattern": "^(?!/)(?!.*\\.\\.).*$" } }
+      }
+    }
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "radicalab://gamelab_templates/canvas2d_topdown_racing/schema.json",
+  "title": "GameLab Canvas2D Top-down Racing configuration",
+  "type": "object",
+  "required": ["title", "tile_size", "map", "start", "checkpoints", "laps", "car"],
+  "additionalProperties": false,
+  "properties": {
+    "template": { "const": "canvas2d_topdown_racing" },
+    "title": { "type": "string", "minLength": 1, "maxLength": 80 },
+    "tile_size": { "type": "number", "minimum": 8, "maximum": 128 },
+    "theme": {
+      "type": "object", "additionalProperties": false,
+      "properties": { "road_color": { "type": "string" }, "wall_color": { "type": "string" },
+        "grass_color": { "type": "string" }, "accent_color": { "type": "string" }, "hud_color": { "type": "string" } }
+    },
+    "map": { "type": "array", "minItems": 3, "maxItems": 60, "items": { "type": "string", "minLength": 3, "maxLength": 80 } },
+    "start": {
+      "type": "object", "required": ["col", "row"], "additionalProperties": false,
+      "properties": { "col": { "type": "number", "minimum": 0 }, "row": { "type": "number", "minimum": 0 }, "heading_deg": { "type": "number" } }
+    },
+    "checkpoints": {
+      "type": "array", "minItems": 2, "maxItems": 40,
+      "items": { "type": "object", "required": ["col", "row"], "additionalProperties": false,
+        "properties": { "col": { "type": "number", "minimum": 0 }, "row": { "type": "number", "minimum": 0 } } }
+    },
+    "laps": { "type": "number", "minimum": 1, "maximum": 99 },
+    "car": {
+      "type": "object", "required": ["width", "length", "accel", "max_speed", "turn_rate"], "additionalProperties": false,
+      "properties": {
+        "width": { "type": "number", "exclusiveMinimum": 0, "maximum": 400 },
+        "length": { "type": "number", "exclusiveMinimum": 0, "maximum": 400 },
+        "accel": { "type": "number", "exclusiveMinimum": 0, "maximum": 5000 },
+        "max_speed": { "type": "number", "exclusiveMinimum": 0, "maximum": 3000 },
+        "grass_max_speed": { "type": "number", "exclusiveMinimum": 0, "maximum": 3000 },
+        "brake": { "type": "number", "exclusiveMinimum": 0, "maximum": 8000 },
+        "turn_rate": { "type": "number", "exclusiveMinimum": 0, "maximum": 20 },
+        "friction": { "type": "number", "minimum": 0, "maximum": 1 },
+        "color": { "type": "string" }
+      }
+    },
+    "assets": {
+      "type": "object", "additionalProperties": false,
+      "properties": {
+        "base_path": { "type": "string", "pattern": "^(?!/)(?!.*\\.\\.).*$" },
+        "sprites": { "type": "object", "description": "Keys: car. Relative paths only; a missing sprite falls back to a procedural drawing.",
+          "additionalProperties": { "type": "string", "pattern": "^(?!/)(?!.*\\.\\.).*$" } }
+      }
+    }
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "template_id": "canvas2d_topdown_racing",
+  "name": "Canvas2D Top-down Racing",
+  "version": "1.0.0",
+  "engine": "canvas2d",
+  "description": "Reusable, config-driven top-down time-trial racing: the whole track is shown at once, drive a car with heading-based physics around a JSON tile track through ordered checkpoints for a number of laps, against the clock (total time + best lap). Off-track grass slows the car; walls stop it. No AI opponents in v1. Procedural fallback graphics; standalone browser export.",
+  "entry": "runtime/index.html",
+  "runtime_files": ["runtime/index.html", "runtime/style.css", "runtime/game_runtime.js"],
+  "schema": "schema.json",
+  "examples": ["examples/circuit_time_trial.json"],
+  "config_filename": "game_config.json",
+  "capabilities": [
+    "fixed full-track top-down view from a JSON tile map ('#' wall, '.' road, other = grass)",
+    "heading-based car physics: accelerate, brake/reverse, speed-scaled steering, coasting friction",
+    "surface effects: grass caps speed, walls stop the car",
+    "ordered checkpoints (index 0 = start/finish) and multi-lap races",
+    "lap timer, total time and best-lap tracking",
+    "time trial (no AI opponents in v1)",
+    "procedural fallback graphics",
+    "standalone export (relative paths, no server calls)"
+  ],
+  "constraints": [
+    "vanilla HTML/CSS/JS only — no Node, npm or frameworks",
+    "configuration-driven: generators produce JSON matching schema.json, never runtime code",
+    "relative asset paths only; a missing car sprite falls back to a procedural drawing",
+    "no AI opponents and no scrolling camera in v1"
+  ],
+  "credits": { "concept_and_design": "Fabrizio Radica", "project_by": "RadicaDesign" }
+}

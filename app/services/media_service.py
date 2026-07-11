@@ -77,6 +77,10 @@ MEDIA_CONTENT_TYPES = {
     ".jpeg": "image/jpeg",
     ".gif": "image/gif",
     ".json": "application/json",
+    # GameLab AI build serving (Test Play loads the standalone build in-app)
+    ".html": "text/html; charset=utf-8",
+    ".css": "text/css; charset=utf-8",
+    ".js": "text/javascript; charset=utf-8",
     ".mp3": "audio/mpeg",
     ".wav": "audio/wav",
     ".ogg": "audio/ogg",

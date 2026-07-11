@@ -1,0 +1,209 @@
+# =========================================================
+# Radica - WanVideoGenerator
+# Concept & Design: Fabrizio Radica — Project by RadicaDesign
+# Copy this file to .env and adjust values for your machine.
+# =========================================================
+
+# Application
+APP_NAME="Radica - WanVideoGenerator"
+APP_VERSION=1.0.0
+APP_ENV=development
+APP_DEBUG=true
+APP_HOST=127.0.0.1
+APP_PORT=8000
+
+# Branding
+APP_CREDITS_CONCEPT="Fabrizio Radica"
+APP_CREDITS_PROJECT="RadicaDesign"
+
+# Paths
+PROJECTS_ROOT=./projects
+OUTPUTS_ROOT=./outputs
+TEMP_ROOT=./temp
+MODELS_ROOT=./models
+WORKFLOWS_ROOT=./workflows
+LOGS_ROOT=./logs
+STATIC_ROOT=./app/static
+
+# Generation backend: wan (real Wan 2.2+ inference, production default)
+#                    | mock (developer-only simulation, needs APP_ENV=development)
+GENERATION_BACKEND=wan
+
+# Real Wan backend runtime options
+DEFAULT_DEVICE=cuda
+WAN_TORCH_DTYPE=float16
+# Offload mode: model (default, fits big models on consumer GPUs)
+#             | sequential (lowest VRAM, slower) | none (whole pipeline on GPU)
+WAN_OFFLOAD_MODE=model
+WAN_ATTENTION_SLICING=false
+# Flow-matching shift for the UniPC scheduler; 0 = auto (5.0 for >=720p, 3.0 below)
+WAN_FLOW_SHIFT=0
+# Dual-expert boundary for Wan2.2 A14B bundles with a transformer_2 component
+WAN_BOUNDARY_RATIO=0.875
+# Allow fetching the small UMT5 tokenizer from the Hugging Face Hub when the
+# bundle has no local tokenizer_path (cached after the first download)
+WAN_ALLOW_HF_DOWNLOAD=true
+
+# --- Explicit device placement (patch6 §6) ---------------------------------
+# Per-component device policy: cuda | cpu | auto.
+# "auto" follows the offload policy (components stream to GPU when needed).
+# Effective placement is always reported in the Backend Diagnostics panel.
+WAN_MAIN_DEVICE=cuda
+WAN_DIFFUSION_DEVICE=auto
+WAN_TEXT_ENCODER_DEVICE=auto
+WAN_VAE_DEVICE=auto
+WAN_VISION_ENCODER_DEVICE=auto
+# Offload policy: disabled (whole pipeline on GPU) | balanced (model offload,
+# default) | aggressive (sequential offload, lowest VRAM, slowest).
+# Preferred over the legacy WAN_OFFLOAD_MODE above.
+WAN_OFFLOAD_POLICY=balanced
+WAN_FORCE_GPU_WHEN_POSSIBLE=true
+WAN_WARN_IF_TEXT_ENCODER_ON_CPU=true
+WAN_WARN_IF_VAE_ON_CPU=true
+
+# --- Explicit precision / dtype policy (patch6 §7) -------------------------
+# Requested compute precision: fp16 | bf16 | fp32. fp8 checkpoints are always
+# dequantized to this precision for compute (diffusers has no fp8 kernel).
+WAN_DEFAULT_PRECISION=fp16
+WAN_ALLOW_FP8=true
+WAN_ALLOW_BF16=true
+WAN_ALLOW_FP16=true
+WAN_WARN_ON_DTYPE_FALLBACK=true
+
+# --- VRAM cleanup / model warmth (patch6 §16, patch8 §19) -----------------
+# Keep model weights loaded between generations (fast) vs. free everything.
+WAN_KEEP_MODEL_WARM=true
+WAN_CLEAR_TEMP_VRAM_AFTER_GENERATION=true
+WAN_UNLOAD_MODEL_AFTER_GENERATION=false
+# patch8: mandatory VRAM cleanup also runs after Stop/Cancel and on failure.
+WAN_CLEAR_TEMP_VRAM_AFTER_CANCEL=true
+WAN_UNLOAD_MODEL_AFTER_CANCEL=true
+WAN_LOG_VRAM_CLEANUP=true
+
+# --- Wan2.2 TI2V 5B presets (patch8 §25) ----------------------------------
+# manual | wan22_5b_fast_preview | wan22_5b_safe_quality | wan22_5b_low_vram
+WAN_DEFAULT_PRESET=wan22_5b_safe_quality
+WAN_PRESET_SHOW_CHANGES=true
+WAN_VALIDATE_RESOLUTION_MULTIPLE_OF=16
+WAN_DEFAULT_FPS=16
+WAN_FAST_PREVIEW_FRAMES=49
+WAN_FAST_PREVIEW_STEPS=18
+WAN_SAFE_QUALITY_FRAMES=81
+WAN_SAFE_QUALITY_STEPS=32
+WAN_LOW_VRAM_FRAMES=49
+WAN_LOW_VRAM_STEPS=22
+
+# --- ComfyUI API render backend (patch6 §17, optional/experimental) --------
+# When enabled, generation can be routed to a running ComfyUI instance for
+# exact parity instead of the direct diffusers backend.
+COMFYUI_API_ENABLED=false
+COMFYUI_API_URL=http://127.0.0.1:8188
+COMFYUI_API_TIMEOUT_SECONDS=3600
+
+# --- Sampler fallback policy (patch6c §8) ----------------------------------
+# What happens when the selected sampler is NOT supported by the direct backend
+# (direct-supported: uni_pc, euler, heun, dpmpp_2m, dpmpp_2m_sde).
+#   block              -> do not start; show a blocking error (DEFAULT, no silent fallback)
+#   ask                -> require explicit confirmation before any fallback
+#   route_to_comfyui   -> render via ComfyUI so the sampler is used exactly (needs COMFYUI_API_ENABLED)
+#   allow_with_warning -> debug only: render with uni_pc, clearly reported everywhere
+WAN_SAMPLER_FALLBACK_POLICY=block
+WAN_AUTO_ROUTE_UNSUPPORTED_SAMPLER_TO_COMFYUI=true
+WAN_WARN_ON_SAMPLER_FALLBACK=true
+
+# --- ModelSamplingSD3 modifier (patch7 §17) --------------------------------
+# ModelSamplingSD3 == the flow-matching sigma shift the ComfyUI node applies.
+# The direct backend applies it exactly (scheduler shift); it can noticeably
+# change/improve quality. These control the default for NEW projects.
+WAN_MODEL_SAMPLING_SD3_ENABLED_DEFAULT=true
+WAN_MODEL_SAMPLING_SD3_SHIFT_DEFAULT=8.0
+# If a backend cannot apply it: block | ask | route_to_comfyui (no silent ignore).
+WAN_MODEL_SAMPLING_FALLBACK_POLICY=route_to_comfyui
+WAN_AUTO_ROUTE_MODELSAMPLINGSD3_TO_COMFYUI=true
+WAN_WARN_ON_MODEL_SAMPLING_FALLBACK=true
+
+# Default generation mode: text2video | image2video
+DEFAULT_GENERATION_MODE=text2video
+
+# Default model identifiers
+#wan2.2_ti2v_5B_fp16.safetensors
+#wan2.2_ti2v_5B_fp8.safetensors
+DEFAULT_T2V_MODEL=wan2.2_ti2v_5B_fp16.safetensors
+DEFAULT_I2V_MODEL=wan2.2_ti2v_5B_fp16.safetensors
+
+# Generation defaults
+DEFAULT_ORIENTATION=landscape
+DEFAULT_RESOLUTION=1280x704
+DEFAULT_FPS=16
+DEFAULT_FRAMES=81
+DEFAULT_SEED=-1
+DEFAULT_GUIDANCE_SCALE=6.0
+DEFAULT_MOTION_STRENGTH=0.7
+DEFAULT_STEPS=30
+DEFAULT_OUTPUT_FORMAT=mp4
+
+# ComfyUI/KSampler compatibility defaults
+DEFAULT_CONTROL_AFTER_GENERATE=fixed
+DEFAULT_SAMPLER_NAME=euler
+DEFAULT_SCHEDULER=simple
+DEFAULT_DENOISE=1.0
+
+# Test presets
+TEST_LOW_LANDSCAPE_RESOLUTION=384x224
+TEST_LOW_PORTRAIT_RESOLUTION=224x384
+TEST_QUICK_LANDSCAPE_RESOLUTION=640x352
+TEST_QUICK_PORTRAIT_RESOLUTION=352x640
+
+# Uploads
+MAX_UPLOAD_SIZE_MB=50
+ALLOWED_IMAGE_EXTENSIONS=jpg,jpeg,png,webp
+ALLOWED_VIDEO_EXTENSIONS=mp4,webm,mov
+
+# Performance
+USE_CUDA=true
+VRAM_WARNING_GB=10
+ENABLE_MEMORY_OPTIMIZATION=true
+MAX_PARALLEL_JOBS=1
+
+# ComfyUI
+COMFYUI_EXPORT_ENABLED=true
+COMFYUI_WORKFLOW_VERSION=wan_video_generator_v1
+COMFYUI_DEFAULT_SAVE_NODE=true
+
+# Video effects / Color & Look post-processing
+VIDEO_EFFECTS_ENABLED=true
+VIDEO_EFFECTS_PREVIEW_ENABLED=true
+VIDEO_EFFECTS_PREVIEW_MAX_WIDTH=640
+
+# Audio tracks post-processing (applied AFTER Wan generation, never affects inference)
+AUDIO_TRACKS_ENABLED=true
+ALLOWED_AUDIO_EXTENSIONS=mp3,wav,ogg,flac,m4a
+MAX_AUDIO_UPLOAD_SIZE_MB=100
+# ffmpeg binary; "ffmpeg" = use PATH, falls back to the bundled imageio-ffmpeg binary
+FFMPEG_PATH=ffmpeg
+AUDIO_DEFAULT_VOLUME=1.0
+AUDIO_DEFAULT_FADE_IN=0.0
+AUDIO_DEFAULT_FADE_OUT=0.0
+AUDIO_DEFAULT_LOOP=false
+AUDIO_DEFAULT_TRIM_TO_VIDEO=true
+
+# System monitor (topbar resource pills)
+SYSTEM_MONITOR_ENABLED=true
+SYSTEM_MONITOR_POLL_INTERVAL_MS=2000
+SYSTEM_MONITOR_DISK_PATH=./projects
+SYSTEM_MONITOR_SHOW_GPU=true
+SYSTEM_MONITOR_SHOW_DISK=true
+SYSTEM_MONITOR_DISK_WARNING_PERCENT=75
+SYSTEM_MONITOR_DISK_CRITICAL_PERCENT=90
+
+# Generation progress polling (global progress strip)
+GENERATION_PROGRESS_POLL_INTERVAL_MS=1000
+GENERATION_COMPLETED_VISIBLE_SECONDS=30
+GENERATION_FAILED_VISIBLE_SECONDS=60
+
+# Logging
+LOG_LEVEL=INFO
+LOG_FILE=./logs/app.log
+
+# Security
+SESSION_SECRET_KEY=change_this_secret_key

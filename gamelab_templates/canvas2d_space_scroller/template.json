@@ -1,0 +1,29 @@
+{
+  "template_id": "canvas2d_space_scroller",
+  "name": "Canvas2D Space Scroller",
+  "version": "1.0.0",
+  "engine": "canvas2d",
+  "description": "Reusable, config-driven space cave-flyer: pilot a ship with inertial thrust through a scrolling tilemap level with real per-axis wall collision, over multi-layer parallax starfields. Solid tiles block the ship, hazard tiles destroy it (lives), collectibles add score, reach the exit to clear the level. Procedural fallback graphics; standalone browser export.",
+  "entry": "runtime/index.html",
+  "runtime_files": ["runtime/index.html", "runtime/style.css", "runtime/game_runtime.js"],
+  "schema": "schema.json",
+  "examples": ["examples/asteroid_cavern.json"],
+  "config_filename": "game_config.json",
+  "capabilities": [
+    "multi-layer parallax starfields (and color tint layers) scrolled by the camera",
+    "tilemap level ('#' solid wall, hazard char, else empty) with a scrolling camera that follows the ship",
+    "inertial ship thrust physics with damping and a speed cap",
+    "real per-axis AABB wall collision (walls block; the ship cannot pass through)",
+    "hazard tiles crash the ship (lives + respawn invulnerability)",
+    "collectibles (score) and level-complete on reaching the exit (optionally requires all collectibles)",
+    "procedural fallback graphics",
+    "standalone export (relative paths, no server calls)"
+  ],
+  "constraints": [
+    "vanilla HTML/CSS/JS only — no Node, npm or frameworks",
+    "configuration-driven: generators produce JSON matching schema.json, never runtime code",
+    "relative asset paths only; missing sprites fall back to procedural drawings",
+    "no shooting in v1 — this is a navigation/flight template; the map is JSON-defined (no procedural generation)"
+  ],
+  "credits": { "concept_and_design": "Fabrizio Radica", "project_by": "RadicaDesign" }
+}

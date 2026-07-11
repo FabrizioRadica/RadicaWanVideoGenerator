@@ -101,6 +101,12 @@ class Settings:
     outputs_root: Path = field(default_factory=lambda: _path("OUTPUTS_ROOT", "./outputs"))
     temp_root: Path = field(default_factory=lambda: _path("TEMP_ROOT", "./temp"))
     models_root: Path = field(default_factory=lambda: _path("MODELS_ROOT", "./models"))
+    # GameLab (interactive_web_game) projects live in their own root so they never
+    # mix with VideoLab .wanproj projects or the project/library listings.
+    gamelab_root: Path = field(default_factory=lambda: _path("GAMELAB_ROOT", "./projects/gamelab"))
+    # Read-only repository of controlled GameLab game templates (template.json,
+    # schema.json, locked runtime). Never auto-created — it ships with the project.
+    gamelab_templates_root: Path = field(default_factory=lambda: _path("GAMELAB_TEMPLATES_ROOT", "./gamelab_templates"))
     workflows_root: Path = field(default_factory=lambda: _path("WORKFLOWS_ROOT", "./workflows"))
     logs_root: Path = field(default_factory=lambda: _path("LOGS_ROOT", "./logs"))
     static_root: Path = field(default_factory=lambda: _path("STATIC_ROOT", "./app/static"))
@@ -366,6 +372,7 @@ class Settings:
     def ensure_directories(self) -> None:
         for directory in (
             self.projects_root,
+            self.gamelab_root,
             self.outputs_root,
             self.temp_root,
             self.models_root,

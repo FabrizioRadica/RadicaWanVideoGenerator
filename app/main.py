@@ -19,6 +19,7 @@ from app.routes import (
     ai_assistant_routes,
     audio_routes,
     video_effects_routes,
+    gamelab_routes,
     generation_routes,
     home_routes,
     library_routes,
@@ -70,6 +71,7 @@ app.include_router(video_effects_routes.router)
 app.include_router(settings_routes.router)
 app.include_router(ai_assistant_routes.router)
 app.include_router(prompt_library_routes.router)
+app.include_router(gamelab_routes.router)
 
 
 @app.exception_handler(Exception)

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="generator" content="RadicaLab GameLab — canvas2d_horizontal_shooter">
+  <title>Horizontal Shooter — RadicaLab GameLab</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="game-root" class="rs-root"></div>
+  <script src="game_runtime.js"></script>
+  <script>
+    /* Config loading order (honest, no fake fallback game):
+       1. inline <script type="application/json" id="rs-config"> (injected by an export)
+       2. ./game_config.json (the name used by exported builds)
+       3. ../examples/space_horizontal_shooter.json (template demo, needs HTTP)
+       If none is available, a clear error screen is shown. */
+    (function () {
+      var root = document.getElementById("game-root");
+      function boot(cfg) { RadicaShooter.mount(root, cfg); }
+      function fail(msg) {
+        var box = document.createElement("div");
+        box.className = "rs-error";
+        var h = document.createElement("h1");
+        h.textContent = "No game configuration";
+        var p = document.createElement("p");
+        p.textContent = msg;
+        box.appendChild(h); box.appendChild(p);
+        root.appendChild(box);
+      }
+      var inline = document.getElementById("rs-config");
+      if (inline) {
+        try { boot(JSON.parse(inline.textContent)); }
+        catch (e) { fail("The inline configuration is not valid JSON."); }
+        return;
+      }
+      function tryFetch(url) {
+        return fetch(url).then(function (r) {
+          if (!r.ok) throw new Error(url);
+          return r.json();
+        });
+      }
+      tryFetch("game_config.json")
+        .catch(function () { return tryFetch("../examples/space_horizontal_shooter.json"); })
+        .then(boot)
+        .catch(function () {
+          fail("Place a game_config.json next to index.html, or serve this template folder " +
+               "over HTTP (e.g. `python -m http.server`) to load the bundled example — " +
+               "browsers block fetch() on file:// pages.");
+        });
+    })();
+  </script>
+</body>
+</html>

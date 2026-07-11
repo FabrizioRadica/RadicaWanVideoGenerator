@@ -1,0 +1,1515 @@
+# RadicaLab · Local AI Creative Studio
+
+**A modular, self-hosted local AI creative platform for video generation, prompt workflows, audio tools, game-oriented pipelines and future experimental modules.**
+
+```text
+RadicaLab
+Current video module: Radica - WanVideoGenerator / Video Studio
+Concept & Design: Fabrizio Radica
+Project by RadicaDesign
+```
+
+RadicaLab is the evolution of **Radica - WanVideoGenerator**. The project started as a professional, browser-based local video generation studio for **Wan 2.2+**; it is now moving toward a broader modular platform where different AI engines and creative systems can coexist without locking the application to a single model family.
+
+The current production-ready module is **Video Studio**, powered today by the real Wan 2.2 backend. The direction of the platform is wider: modular video backends such as **Wan 2.2**, future **LTX Video 2.3+** support, prompt assistants, post-processing, audio workflows, sequence tools, game-development utilities and, later, experimental robotics/simulation modules.
+
+The core philosophy remains unchanged: **local-first, real functionality, no fake generation, no placeholder output, no frontend build chain, and no mock features presented as working systems.**
+
+The application is built with **Python, FastAPI, Jinja2 templates, CSS, vanilla JavaScript, ffmpeg, PyTorch, diffusers, transformers and safetensors**. There is no Node.js, no npm, no React, no Vue, no Angular, no Svelte, no Electron and no Tauri.
+
+Everything runs on your machine. Nothing is uploaded anywhere unless you explicitly configure an external AI provider for optional assistant features.
+
+<img width="1264" height="690" alt="Screenshot 2026-07-07 084827" src="https://github.com/user-attachments/assets/20c683fd-6538-48b3-a50f-6147df525043" />
+
+<img width="1276" height="638" alt="Screenshot 2026-07-07 121606" src="https://github.com/user-attachments/assets/8aa1b455-90fa-45ad-9602-cd108db66d2e" />
+
+<img width="2542" height="1393" alt="immagine" src="https://github.com/user-attachments/assets/50e3efd3-9359-47b6-9231-38b04aec5491" />
+
+---
+
+## Platform vision
+
+RadicaLab is designed as a **modular local AI workbench**, not as a single-model demo. The current focus is video generation, but the architecture is moving toward independent modules that can be enabled, extended or replaced over time.
+
+Planned platform areas:
+
+```text
+RadicaLab
+  Video Studio
+    Wan 2.2 backend
+    Future LTX Video 2.3+ backend
+    Future video backends
+  Prompt Assistant
+    Single Clip prompt generation
+    Multi-clip sequence planning
+    Backend-aware prompt guidance
+  Audio Studio
+    Multi-track audio post-processing
+    Future voice/music/audio tools
+  Game Tools
+    Future game-oriented AI pipelines
+    Asset, prompt and prototype helpers
+  Robotics Lab
+    Future robotics/simulation experiments
+    Possible digital-twin and control-system utilities
+```
+
+The goal is not to turn the application into a generic collection of disconnected tools. The goal is to build a coherent local production environment where each module produces real output and can work with the others.
+
+---
+
+## Current status
+
+The current working application is still centered on **Video Studio** and the existing **Wan 2.2+** workflow:
+
+```text
+Text2Video
+Image2Video
+Single Clip
+VideoSequenceQueue
+AI Prompt Assistant
+Color & Look
+Audio Tracks
+Model Bundles
+Project management
+Local backend diagnostics
+ComfyUI workflow export
+```
+
+Wan 2.2 is no longer treated as the permanent identity of the whole platform. It is becoming the **first video backend module** inside RadicaLab.
+
+Future video engines should be integrated through a backend-module layer instead of being hardcoded throughout the app.
+
+---
+
+## Core principles
+
+- **Local-first**: generation runs on the user's machine whenever possible.
+- **Real generation only**: no fake video, no fake preview, no placeholder success.
+- **Modular growth**: new engines and tools should be added as modules, not by rewriting the app.
+- **Stable Single Clip**: the current Single Clip workflow must remain reliable while the platform grows.
+- **Backend honesty**: requested and effective generation parameters must be visible and diagnosable.
+- **No unnecessary frontend stack**: server-rendered HTML, CSS and vanilla JavaScript only.
+- **Project portability**: projects, sequences and assets should use relative paths and local folders.
+- **Patch-friendly development**: changes should be incremental, reviewable and tracked.
+
+---
+
+## Features
+
+- 🎬 **Video Studio with real Wan 2.2+ generation** — Text2Video and Image2Video through the current Wan backend using diffusers, with real model loading, real inference and real output files.
+- 🧩 **Modular video backend direction** — Wan 2.2 is being structured as the first selectable video backend. Future backends such as LTX Video 2.3+ should provide their own parameters, presets, validation and diagnostics without breaking existing Wan workflows.
+- 🧵 **VideoSequenceQueue** — build ordered multi-clip sequences, render clips sequentially, stop/resume safely, reuse Color & Look and Audio Tracks, export separate clips and optionally create a merged final video.
+- ✨ **AI Prompt Assistant** — optional provider-based assistant for Single Clip prompts and multi-clip sequence planning. Supports local and cloud providers, but never starts renders by itself.
+- 🔔 **Audio feedback** — synthesized Web Audio cues for completions, warnings and errors, without external audio asset files.
+- 📦 **Model Bundle manager** — register local model components and pipeline folders. Current production use is Wan-oriented, with a path toward backend-specific model registries.
+- 🗂 **Project-based workflow** — single clips and sequences are saved as local projects with assets, outputs, metadata and portable project files.
+- 🎥 **Camera Motion Assistant** — camera movement helper that composes motion prompt fragments without overwriting user text.
+- 📊 **Honest job system** — background generation with progress, stage log, requested-vs-effective metadata and readable failures.
+- ⏱ **Duration control** — duration, FPS and frame count stay synchronized with valid backend rules.
+- 🖥 **System resource monitor** — live CPU, RAM, GPU, VRAM and disk indicators.
+- 🔄 **Persistent generation progress** — running jobs remain server-side and can reconnect after refresh/navigation.
+- 🎨 **Color & Look** — ffmpeg-based visual post-processing that never modifies raw generated videos.
+- 🎵 **Audio Tracks** — multi-track audio post-processing for clips and final sequences.
+- 🖼 **Video, project and sequence libraries** — browse, preview, reload, download and manage outputs.
+- 🔌 **ComfyUI workflow export** — export generation metadata and workflow graphs.
+- ⚙️ **Configurable through `.env` and local config files** — with readable backend-readiness indicators.
+
+---
+
+## Modular video backend direction
+
+The next architectural step is to make video generation backend-aware. Instead of assuming that every render is Wan-specific, the platform should route generation through a backend registry.
+
+Conceptual structure:
+
+```text
+app/services/video_backends/
+  base.py
+  registry.py
+  wan_backend_module.py
+  future_ltx_backend_module.py
+```
+
+Each backend module should define:
+
+```text
+backend_id
+display_name
+supported modes
+common parameter mapping
+backend-specific parameter schema
+model compatibility
+preset compatibility
+validation rules
+generation function
+diagnostics
+```
+
+The first registered backend is expected to be:
+
+```text
+wan_22
+```
+
+Future backends may include:
+
+```text
+ltx_23
+future_video_backend
+```
+
+The important rule is that new engines must not be added by duplicating the whole application or by hardcoding model-specific assumptions into unrelated modules.
+
+---
+
+## Video Studio module
+
+Video Studio is the current production module of RadicaLab. It contains the existing Single Clip and VideoSequenceQueue workflows.
+
+The current backend is Wan 2.2+, but the UI and backend should gradually move toward this mental model:
+
+```text
+Video Studio
+  Common generation settings
+  Selected video backend
+  Backend-specific settings
+  Backend-specific presets
+  Backend-specific model bundles
+  Backend diagnostics
+```
+
+Common parameters should remain shared where possible:
+
+```text
+prompt
+negative prompt
+mode
+width
+height
+frames
+fps
+seed
+steps
+guidance / cfg
+source image
+output format
+```
+
+Backend-specific parameters should stay isolated inside each backend module.
+
+For Wan, examples include:
+
+```text
+ModelSamplingSD3
+flow-matching shift
+Wan model bundle components
+Wan sampler compatibility
+Wan-specific presets
+```
+
+For future LTX support, the backend will need its own model layout, parameters, validation and presets. LTX must not be faked by renaming Wan settings.
+
+---
+
+## Video Studio: VideoSequenceQueue
+
+The **VideoSequenceQueue** is a separate section beside the current Single Clip workflow:
+
+```text
+[ Single Clip ] [ VideoSequenceQueue ]
+```
+
+**Single Clip remains unchanged.** The sequence workflow is dedicated to building a short sequence made of multiple generated clips.
+
+Example use case:
+
+```text
+Beach sequence
+
+Clip 01 -> inside a beach bar -> bar ambience
+Clip 02 -> outside on the beach -> waves, wind, crowd
+Clip 03 -> sunset shoreline -> soft wind, seagulls
+Sequence audio -> continuous music bed over the final merged video
+```
+
+Each sequence clip can be:
+
+```text
+Image Reference + prompt
+Prompt Only
+```
+
+The queue renders **sequentially**:
+
+```text
+Clip 01 finishes
+then Clip 02 starts
+then Clip 03 starts
+...
+```
+
+It never renders clips in parallel. This keeps VRAM/RAM usage safer and makes stop/resume predictable.
+
+### Sequence clip states
+
+Each clip has an explicit state:
+
+```text
+ready
+queued
+rendering
+completed
+failed
+cancel_requested
+cancelled
+stopped
+needs_regeneration
+skipped
+```
+
+If you stop while Clip 03 is rendering:
+
+```text
+Clip 01 -> completed
+Clip 02 -> completed
+Clip 03 -> stopped / needs_regeneration
+Clip 04 -> queued
+```
+
+You can edit Clip 03 and resume from Clip 03. Completed clips are preserved unless you explicitly regenerate them.
+
+### Color & Look in sequences
+
+The existing **Color & Look** module is reused. It is not rewritten.
+
+It can run in these contexts:
+
+```text
+single_clip
+sequence_global
+sequence_clip
+```
+
+A sequence supports:
+
+```text
+Global Color & Look
+Custom Color & Look per clip
+Color & Look Off per clip
+```
+
+The clip pipeline is:
+
+```text
+Wan raw render
+→ Color & Look / effects
+→ Clip Audio Tracks
+→ Clip final
+```
+
+Color & Look remains post-processing. It is not applied inside Wan inference, and raw videos are never modified.
+
+### Audio in sequences
+
+The existing **Audio Tracks** module is reused. It is not rewritten.
+
+The sequence has two audio levels:
+
+```text
+Clip Audio Tracks
+Sequence Audio Tracks
+```
+
+**Clip Audio Tracks** are ambience/sound effects specific to a clip:
+
+```text
+Clip 01: bar ambience, glasses, people talking
+Clip 02: waves, wind, beach crowd
+Clip 03: seagulls, soft wind
+```
+
+They are applied before the final merge.
+
+**Sequence Audio Tracks** are global audio over the whole final sequence:
+
+```text
+music bed
+voiceover
+global cinematic ambience
+```
+
+They are applied after the final video merge, so music does not restart at each clip.
+
+Full pipeline:
+
+```text
+Clip 01:
+  Wan raw render
+  Apply Color & Look
+  Apply Clip Audio Tracks
+  Output Clip_001_final.mp4
+
+Clip 02:
+  Wan raw render
+  Apply Color & Look
+  Apply Clip Audio Tracks
+  Output Clip_002_final.mp4
+
+Clip 03:
+  Wan raw render
+  Apply Color & Look
+  Apply Clip Audio Tracks
+  Output Clip_003_final.mp4
+
+Merge:
+  Merge Clip_001_final + Clip_002_final + Clip_003_final
+  Output Sequence_merged_video.mp4
+
+Sequence Audio:
+  Apply Sequence Audio Tracks to Sequence_merged_video.mp4
+  Output Sequence_final.mp4
+```
+
+If output mode is **Render clips only**, Sequence Audio Tracks are not applied because there is no final merged video.
+
+### Sequence outputs
+
+Per clip:
+
+```text
+BeachShort001_clip_001_raw.mp4
+BeachShort001_clip_001_fx.mp4
+BeachShort001_clip_001_final.mp4
+```
+
+Final optional outputs:
+
+```text
+BeachShort001_merged_video.mp4
+BeachShort001_final.mp4
+```
+
+Regenerating a clip should archive or version old outputs instead of silently overwriting them.
+
+### Sequence save/load
+
+Single clip projects and sequence projects are separate.
+
+Project type markers:
+
+```json
+{
+  "project_type": "single_clip"
+}
+```
+
+```json
+{
+  "project_type": "video_sequence"
+}
+```
+
+Older projects without `project_type` are treated as `single_clip`.
+
+A sequence project saves:
+
+```text
+sequence_id
+name
+global generation settings
+global Color & Look
+sequence audio tracks
+clip list and order
+per-clip prompts/images/settings
+per-clip Color & Look mode
+per-clip audio tracks
+render state
+generated outputs
+diagnostics
+```
+
+Uploaded reference images and audio files are copied into the sequence project folder, not stored as temporary upload paths.
+
+---
+
+## AI Prompt Assistant
+
+The **AI Prompt Assistant** is an optional, modular layer that helps you write prompts and plan sequences using a language model of your choice. It is **disabled by default** and is enabled from **Settings → 🤖 AI Assistant**.
+
+It never renders anything. It only produces text and hands it to the existing systems:
+
+```text
+Single Clip Assistant   -> writes positive/negative prompts into the current clip fields
+Sequence Assistant      -> plans a multi-clip sequence and populates the existing VideoSequenceQueue
+```
+
+Rendering always stays an explicit user action. The assistant will never press Generate for you.
+
+### Providers
+
+The assistant is provider-based. It does not hardcode a single backend:
+
+```text
+Ollama      -> local  (default Base URL http://localhost:11434)
+LM Studio   -> local  (OpenAI-compatible, default http://localhost:1234/v1)
+OpenAI      -> cloud  (API key required)
+Anthropic   -> cloud  (API key required)
+DeepSeek    -> cloud  (API key required)
+```
+
+All provider calls are asynchronous and non-blocking. Errors (server unreachable, missing API key, bad model name, timeout, unparseable response) are shown clearly in the UI and never crash the app.
+
+### Single Clip Assistant
+
+Describe a scene (plus optional subject, style, camera movement, mood and environment) and the assistant returns:
+
+```text
+positive_prompt
+negative_prompt
+notes
+```
+
+You can regenerate only the positive or only the negative prompt, copy the result, and apply it to the current clip:
+
+```text
+Apply positive
+Apply negative
+Apply both
+```
+
+Existing prompt fields are not overwritten without confirmation unless **Auto-apply generated prompts** is enabled. The negative prompt targets common video-generation artifacts (bad anatomy, broken hands, flickering, identity drift, jitter, text, watermark, and so on).
+
+### Sequence Assistant
+
+Describe a film/sequence and set the number of clips, duration per clip, clip-type preference (Text2Video / Image2Video / infer) and continuity/identity requirements. The assistant returns a structured plan you can review and edit before adding:
+
+```text
+sequence_title
+global_style
+global_negative_prompt
+clips[]:
+  clip_name
+  clip_type (Text2Video / Image2Video)
+  positive_prompt
+  negative_prompt
+  duration_seconds
+  camera_notes / motion_notes / continuity_notes
+  image_reference_required
+```
+
+You edit clip names and prompts in the preview, then add them to a target sequence:
+
+```text
+Append to current SequenceQueue   (default)
+Replace current SequenceQueue
+```
+
+Clips are mapped onto the **existing** SequenceQueue clip model and saved through the existing sequence service — no parallel queue is created. Per-clip durations are converted to Wan-valid frame counts. Image2Video clips are added as image-reference clips; add a source image to them before rendering.
+
+### Resource management (protects WAN VRAM/RAM)
+
+Local LLMs consume RAM and sometimes VRAM that the Wan backend needs. The assistant is resource-aware:
+
+```text
+- After prompt/sequence generation it releases local LLM resources whenever the
+  provider technically supports it (Ollama unloads via keep_alive=0; LM Studio
+  is marked idle — no fake unload is ever invented).
+- By default it will NOT run local LLM inference while a WAN/video render is
+  active. This can be overridden in Settings (Allow local AI during render).
+- Cloud providers keep cleanup lightweight (no local VRAM to free).
+- Optional VRAM/RAM headroom warnings before local generation.
+```
+
+Resource cleanup is a **separate phase** from generation: a cleanup failure is reported as a non-blocking warning and never discards a successfully generated prompt or sequence.
+
+### Audio feedback
+
+A reusable **AudioFeedbackModule** plays short synthesized cues (Web Audio — no sound files shipped) for:
+
+```text
+single clip generation completed
+whole SequenceQueue completed
+AI finished populating a sequence
+warnings (optional)
+errors
+```
+
+Volume and each event can be toggled in Settings. Cleanup warnings do not trigger the error sound.
+
+### Configuration and persistence
+
+Assistant settings live in **Settings → 🤖 AI Assistant** and persist across restarts in a local `ai_assistant_config.json` file at the project root (the app's `.env` is read-only, so the assistant keeps its own writable config).
+
+```text
+Enable Prompt Assistant, default assistant mode, entry-point buttons
+Provider, model name, base URL, API key, temperature, max tokens, timeout,
+  system prompt override
+Resource management (release, block-during-render, warnings, thresholds, cooldown)
+Audio feedback (enable, volume, per-event toggles)
+```
+
+> ⚠ The provider **API key is stored in plain text** in `ai_assistant_config.json` (single-user local tool). It is never sent back to the browser (the Settings page shows only whether a key is saved). Do not use this on a shared machine with a key you cannot rotate.
+
+### Quick start: AI Prompt Assistant
+
+1. Open **Settings → 🤖 AI Assistant**.
+2. Enable the Prompt Assistant, pick a provider, set the model/Base URL (and API key for cloud providers).
+3. Click **Test connection**, then **Save AI Assistant settings**.
+4. In **Single Clip**, click **✨ Prompt Assistant**, describe the scene, **Generate prompts**, then **Apply**. Save the project as usual.
+5. In **VideoSequenceQueue**, click **✨ Sequence Assistant**, describe the sequence, **Generate sequence plan**, review/edit the clips, choose Append/Replace, and **Add clips to SequenceQueue**.
+6. Start the render yourself when ready — the assistant never renders automatically.
+
+---
+
+## Requirements
+
+### Hardware
+
+| Component | Minimum | Recommended |
+|---|---:|---:|
+| GPU | NVIDIA, 8 GB VRAM with CPU offload | NVIDIA RTX, 12 GB+ VRAM |
+| System RAM | 16 GB | 32 GB |
+| Disk | ~25 GB free for Wan 2.2 TI2V-5B model set | SSD with generous free space |
+
+CPU-only inference is technically possible but unrealistically slow. The app warns clearly.
+
+### Software
+
+- **Python 3.10+**. Python 3.11 is recommended.
+- **NVIDIA driver** compatible with your installed PyTorch CUDA build.
+- **PyTorch with CUDA** matching your GPU.
+- Python packages listed in `requirements.txt`.
+- ffmpeg. The app can use `FFMPEG_PATH`, `ffmpeg` from PATH, or the binary bundled by `imageio-ffmpeg`.
+
+Important package groups from `requirements.txt` include:
+
+```text
+fastapi
+uvicorn
+jinja2
+python-dotenv
+pydantic
+torch
+diffusers
+transformers
+accelerate
+safetensors
+sentencepiece
+ftfy
+Pillow
+imageio-ffmpeg
+psutil
+nvidia-ml-py
+```
+
+Install from `requirements.txt`; do not manually install packages one by one unless you are fixing a CUDA/PyTorch version mismatch.
+
+---
+
+## Model files
+
+A working Wan 2.2 TI2V-5B bundle needs at minimum:
+
+| Component | Example file | Notes |
+|---|---|---|
+| Diffusion model / DiT | `wan2.2_ti2v_5B_fp16.safetensors` | main Wan model |
+| VAE | `wan2.2_vae.safetensors` | required to decode video frames |
+| Text encoder | `umt5_xxl_fp8_e4m3fn_scaled.safetensors` | fp8-scaled files are dequantized on load |
+| Tokenizer | local UMT5 tokenizer folder | recommended to avoid Hugging Face lookup during startup |
+
+Example folder layout:
+
+```text
+models/
+  diffusion_models/
+    wan2.2_ti2v_5B_fp16.safetensors
+    wan2.2_ti2v_5B_fp8.safetensors
+  vae/
+    wan2.2_vae.safetensors
+  text_encoders/
+    umt5_xxl_fp8_e4m3fn_scaled.safetensors
+  tokenizers/
+    umt5_xxl/
+      tokenizer files...
+```
+
+You can also point a model bundle to a local **diffusers pipeline folder** containing `model_index.json`.
+
+A local `tokenizer_path` is recommended. Without it, the backend may try to fetch tokenizer/config files from Hugging Face once and cache them.
+
+---
+
+## Installation
+
+### 1. Clone or copy the project
+
+```bash
+git clone <your-repo-url> RadicaLab
+cd RadicaLab
+```
+
+If you already have the project folder locally, just open a terminal inside it.
+
+### 2. Create a virtual environment
+
+Windows PowerShell:
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+```
+
+Windows CMD:
+
+```bat
+python -m venv .venv
+.venv\Scripts\activate.bat
+```
+
+Linux/macOS:
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+```
+
+If activation is blocked on Windows PowerShell, run PowerShell as user and execute:
+
+```powershell
+Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
+```
+
+Then activate again.
+
+### 3. Install PyTorch CUDA first
+
+For modern NVIDIA GPUs and RTX 50xx/40xx/30xx setups, use the CUDA 12.8 wheel when appropriate:
+
+```bash
+pip install torch --index-url https://download.pytorch.org/whl/cu128
+```
+
+If your GPU/driver requires another CUDA build, use the official PyTorch selector and install the matching command before continuing.
+
+Check CUDA availability:
+
+```bash
+python -c "import torch; print(torch.__version__); print(torch.cuda.is_available()); print(torch.cuda.get_device_name(0) if torch.cuda.is_available() else 'NO CUDA')"
+```
+
+Expected:
+
+```text
+True
+NVIDIA ...
+```
+
+If `torch.cuda.is_available()` is `False`, the real Wan backend will not run on GPU.
+
+### 4. Install project dependencies from requirements.txt
+
+This project has a `requirements.txt`. Use it.
+
+```bash
+pip install -r requirements.txt
+```
+
+If you want to update already-installed packages:
+
+```bash
+pip install -r requirements.txt --upgrade
+```
+
+If `requirements.txt` also contains a torch line and you already installed the correct CUDA torch manually, verify that it did not replace your CUDA build with a CPU build:
+
+```bash
+python -c "import torch; print(torch.__version__, torch.version.cuda, torch.cuda.is_available())"
+```
+
+### 5. Create `.env`
+
+Windows:
+
+```bat
+copy .env.example .env
+```
+
+Linux/macOS:
+
+```bash
+cp .env.example .env
+```
+
+Then edit `.env`.
+
+Recommended starting values for a 12 GB RTX GPU:
+
+```env
+GENERATION_BACKEND=wan
+USE_CUDA=true
+DEFAULT_DEVICE=cuda
+WAN_TORCH_DTYPE=float16
+
+WAN_KEEP_MODEL_WARM=true
+WAN_CLEAR_TEMP_VRAM_AFTER_GENERATION=true
+WAN_UNLOAD_MODEL_AFTER_GENERATION=false
+WAN_CLEAR_TEMP_VRAM_AFTER_CANCEL=true
+WAN_UNLOAD_MODEL_AFTER_CANCEL=true
+WAN_LOG_VRAM_CLEANUP=true
+
+SYSTEM_MONITOR_ENABLED=true
+SYSTEM_MONITOR_SHOW_GPU=true
+SYSTEM_MONITOR_SHOW_DISK=true
+```
+
+Offload depends on your config naming. The backend internally supports:
+
+```text
+model / auto
+sequential
+none
+```
+
+Recommended normal UI setting for RTX 5070 Ti 12 GB:
+
+```text
+Memory optimization: ON
+Model offload: OFF
+Unload model after generation: OFF
+Precision: fp16
+Device: CUDA
+```
+
+Use offload only if you hit CUDA out-of-memory errors.
+
+### 6. Add model files
+
+Place the Wan model files under `models/` or any stable folder.
+
+Then register them in the **Models** page of the app or edit the model registry if your project supports that.
+
+Make sure the bundle has valid paths for:
+
+```text
+diffusion_model_path
+vae_path
+text_encoder_path
+tokenizer_path, recommended
+```
+
+Path mistakes are common. If a file is not detected, check the exact folder spelling.
+
+Example issue previously found:
+
+```text
+diiffusion_models
+diffusion_models
+```
+
+A single extra letter in the path is enough to mark a model as missing.
+
+### 7. Start the app
+
+Preferred:
+
+```bash
+python -m app.main
+```
+
+Alternative:
+
+```bash
+uvicorn app.main:app --host 127.0.0.1 --port 8000
+```
+
+Open:
+
+```text
+http://127.0.0.1:8000
+```
+
+The topbar should show a green backend indicator such as:
+
+```text
+wan backend ready - NVIDIA GeForce RTX ...
+```
+
+---
+
+## Running with helper scripts
+
+If the repository includes helper scripts such as:
+
+```text
+start.bat
+start.ps1
+run.bat
+restart.bat
+```
+
+you can use them instead of manual terminal commands.
+
+A correct Windows start script should essentially do:
+
+```bat
+@echo off
+cd /d "%~dp0"
+call .venv\Scripts\activate.bat
+python -m app.main
+pause
+```
+
+If a script fails, run the manual installation/start steps above to see the real error.
+
+---
+
+## Quick start: Single Clip
+
+1. Click **＋ New Project**.
+2. Choose mode, orientation and resolution.
+3. Select a model bundle.
+4. Write the prompt and optional negative prompt.
+5. For Image2Video, upload a source image.
+6. Set generation parameters or choose a Wan2.2 preset.
+7. Click **Generate Video**.
+8. Preview the result, apply Color & Look if needed, then apply Audio Tracks if needed.
+
+Final single-clip pipeline:
+
+```text
+Raw Wan output
+→ Color & Look effects (..._fx)
+→ Audio tracks (..._final)
+→ final video
+```
+
+The raw output is never modified.
+
+---
+
+## Quick start: VideoSequenceQueue
+
+1. Click **VideoSequenceQueue** next to Single Clip.
+2. Create or select a sequence.
+3. Add clips:
+   - **Add Image Clip** for Image2Video clips.
+   - **Add Prompt Clip** for Text2Video clips.
+4. For each clip, set prompt, negative prompt, source image if needed and optional overrides.
+5. Set **Global Color & Look** if all clips should share a look.
+6. For a specific clip, use **Edit Look** if it needs a custom look.
+7. Add **Clip Audio Tracks** for ambience or effects specific to that clip.
+8. Add **Sequence Audio Tracks** for music/voiceover over the final merged video.
+9. Choose output mode:
+   - **Render clips only**
+   - **Render clips + final merge**
+   - **Render selected clips only**
+10. Click **Render Queue**.
+
+If you stop the queue:
+
+```text
+completed clips stay completed
+current clip becomes stopped / needs_regeneration
+queued clips remain queued
+```
+
+After editing the stopped clip, click:
+
+```text
+Resume from current clip
+```
+
+The current clip is regenerated and the queue continues.
+
+---
+
+## Recommended Wan2.2 5B presets
+
+### Normal Wan2.2 5B
+
+Fast Preview Portrait:
+
+```text
+352x640
+49 frames
+16 fps
+steps 12
+CFG 3.0
+Euler / Simple
+ModelSamplingSD3 ON
+I2V shift 5.0
+T2V shift 8.0
+```
+
+Safe Quality Portrait:
+
+```text
+480x832
+81 frames
+16 fps
+steps 24
+CFG 3.5
+Euler / Simple
+ModelSamplingSD3 ON
+I2V shift 5.0
+T2V shift 8.0
+```
+
+High Quality Portrait:
+
+```text
+704x1280
+81 frames
+16 fps
+steps 32
+CFG 4.0
+warning: heavy render
+```
+
+Avoid using `704x1280 + 121 frames` as a normal test preset. It is a heavy/final render setting.
+
+### Wan2.2 5B Turbo / Lightning / Lightx2v
+
+Turbo models need different settings.
+
+Recommended Turbo Preview Portrait:
+
+```text
+352x640
+49 frames
+16 fps
+steps 4
+CFG 1.0
+Euler / Simple
+ModelSamplingSD3 ON
+I2V shift 5.0
+T2V shift 8.0
+```
+
+Turbo Quality Portrait:
+
+```text
+480x832
+49 frames
+16 fps
+steps 5
+CFG 1.0
+Euler / Simple
+ModelSamplingSD3 ON
+I2V shift 5.0
+T2V shift 8.0
+```
+
+If you see:
+
+```text
+colored flashes
+flicker
+unstable colors
+overexposed frames
+```
+
+on a Turbo model, lower CFG to `1.0` and use 4–6 steps.
+
+Do not use normal Safe Quality values such as CFG 3.5/4.0 on Turbo unless you intentionally want to test and accept artifacts.
+
+---
+
+## Generation Parameters / KSampler compatibility
+
+The **Generation Parameters** panel includes ComfyUI/KSampler-compatible sampling values:
+
+```text
+Seed
+Control after generate
+Steps
+CFG / Guidance Scale
+Sampler
+Scheduler
+Denoise
+```
+
+Important distinctions:
+
+```text
+Denoise is not CFG.
+Denoise is not Motion Strength.
+Denoise is not Image Influence.
+CFG / Guidance Scale maps to ComfyUI cfg.
+```
+
+The selected sampler must be really used by the backend or explicitly blocked/routed. No silent fallback.
+
+Direct backend supported flow-matching sampler mappings:
+
+| Sampler | Direct backend scheduler |
+|---|---|
+| `uni_pc` | `UniPCMultistepScheduler` |
+| `euler` | `FlowMatchEulerDiscreteScheduler` |
+| `heun` | `FlowMatchHeunDiscreteScheduler` |
+| `dpmpp_2m` | `DPMSolverMultistepScheduler` flow |
+| `dpmpp_2m_sde` | `DPMSolverMultistepScheduler` flow SDE |
+
+Unsupported direct samplers must not be faked.
+
+---
+
+## ModelSamplingSD3 Support
+
+`ModelSamplingSD3` is a real model sampling modifier applied between model loading and sampling.
+
+ComfyUI graph:
+
+```text
+Load Diffusion Model → ModelSamplingSD3(shift) → KSampler
+```
+
+For Wan2.2 flow-matching, this corresponds to the flow-matching sigma shift.
+
+Recommended defaults:
+
+```text
+Text2Video: shift 8.0
+Image2Video: shift 5.0
+```
+
+It is independent from:
+
+```text
+CFG
+denoise
+sampler
+scheduler
+motion strength
+image influence
+prompt text
+```
+
+It must be stored as a first-class setting and shown in requested-vs-effective diagnostics.
+
+---
+
+## VRAM Cleanup
+
+VRAM cleanup runs after:
+
+```text
+successful render
+failed render
+Stop / Cancel
+sequence clip completion
+sequence clip failure
+sequence stop/cancel
+```
+
+Cleanup uses:
+
+```text
+gc.collect()
+torch.cuda.empty_cache()
+torch.cuda.ipc_collect(), if available
+```
+
+Important honesty rule:
+
+```text
+empty_cache() frees PyTorch cached blocks.
+It does not necessarily free VRAM still held by live model objects.
+```
+
+Model weights are unloaded only when configured.
+
+For VideoSequenceQueue, default behavior should be:
+
+```text
+Balanced queue mode:
+  keep pipeline warm
+  clear temporary tensors between clips
+```
+
+Alternative modes:
+
+```text
+Aggressive cleanup between clips
+Reload model every clip
+```
+
+---
+
+## Backend Diagnostics
+
+The diagnostics panel should show:
+
+```text
+requested vs effective settings
+component device map
+component dtype map
+timings
+GPU memory before/after/peak
+image preprocessing
+warnings
+VRAM cleanup report
+pipeline reused true/false
+cache miss reasons when available
+```
+
+This is essential to understand performance differences between first and second render, ComfyUI and direct backend, or normal and Turbo models.
+
+---
+
+## Color & Look video effects
+
+The **Color & Look** panel defines the visual look as post-processing.
+
+Controls include:
+
+```text
+Basic Color:
+  saturation
+  contrast
+  hue
+  temperature
+  shadows
+  highlights
+  brightness
+  gamma
+
+Vignette:
+  intensity
+  radius
+  softness
+
+Film Grain:
+  intensity
+  grain size
+  animated grain
+
+Sharpness
+
+VHS Effect:
+  intensity
+  scanlines
+  chromatic aberration
+  noise
+  jitter
+  tracking distortion
+  color bleeding
+  tape damage
+```
+
+Apply Effects creates:
+
+```text
+<name>_fx.mp4
+```
+
+The raw video is never modified.
+
+---
+
+## Audio Tracks post-processing
+
+Audio is applied after Wan generation and after Color & Look if effects are used.
+
+Per track:
+
+```text
+Enabled
+Volume
+Start time
+Fade in
+Fade out
+Loop
+Trim to video
+```
+
+Apply Audio creates:
+
+```text
+<name>_final.mp4
+```
+
+The raw video is never modified.
+
+In sequences:
+
+```text
+Clip Audio Tracks -> applied per clip before merge
+Sequence Audio Tracks -> applied after final merge
+```
+
+---
+
+## System resource monitor
+
+The topbar shows:
+
+```text
+CPU
+RAM
+GPU
+VRAM
+Disk usage/free space
+```
+
+If NVML fails:
+
+```text
+System monitor: NVML query failed
+```
+
+the app should keep working. This affects monitoring, not necessarily rendering.
+
+---
+
+## Stopping a generation
+
+Stop/cancel must reach the backend, not just hide the UI.
+
+Behavior:
+
+```text
+request cancellation
+mark job cancelled/stopped
+delete incomplete partial output for current job
+preserve completed videos
+cleanup VRAM
+write cancellation metadata
+```
+
+For sequences:
+
+```text
+Stop Queue stops the current clip safely.
+Completed clips remain completed.
+Current clip becomes stopped / needs_regeneration.
+The sequence can resume from that clip.
+```
+
+---
+
+## Project structure
+
+Typical structure:
+
+```text
+app/
+  main.py
+  config.py
+  routes/
+    ai_assistant_routes.py       # AI Prompt Assistant API (/api/ai-assistant/*)
+  services/
+    wan_backend.py
+    generation_service.py
+    model_service.py
+    gpu_memory_service.py
+    sequence_queue_service.py
+    ai_assistant/                # AI Prompt Assistant (providers, resource manager,
+      providers.py               #   prompt/plan services, SequenceQueue population)
+      resource_manager.py
+      prompt_service.py
+      parser.py
+      sequence_population_service.py
+      config_service.py
+  models/
+  templates/
+  static/
+    js/modules/
+      ai_assistant.js            # assistant modal controller
+      ai_assistant_settings.js   # editable Settings section
+      audio_feedback.js          # reusable Web Audio feedback module
+projects/
+models/
+workflows/
+ai_assistant_config.json         # created on first save (assistant settings + API key)
+.env.example
+requirements.txt
+README.md
+```
+
+Single clip project folder:
+
+```text
+projects/
+  <project_id>/
+    source/
+    outputs/
+    previews/
+    metadata/
+    workflows/
+    audio/
+```
+
+Sequence project folder:
+
+```text
+projects/
+  <sequence_id>/
+    sequence.json
+    assets/
+      images/
+      audio/
+    clips/
+      clip_001/
+        raw/
+        fx/
+        final/
+        metadata.json
+      clip_002/
+        raw/
+        fx/
+        final/
+        metadata.json
+    exports/
+      merged/
+      final/
+```
+
+---
+
+## Troubleshooting
+
+### Backend is not ready
+
+Check:
+
+```bash
+python -c "import torch; print(torch.cuda.is_available())"
+pip install -r requirements.txt
+```
+
+Verify `.env`:
+
+```env
+GENERATION_BACKEND=wan
+USE_CUDA=true
+DEFAULT_DEVICE=cuda
+```
+
+### Model file not found
+
+Check exact paths in the model bundle or `registry.json`.
+
+Common mistake:
+
+```text
+diffusion_models
+diiffusion_models
+```
+
+### App tries to contact Hugging Face
+
+Add a local tokenizer path:
+
+```text
+models/tokenizers/umt5_xxl/
+```
+
+and set it in the bundle.
+
+### Second render is much slower
+
+Check:
+
+```text
+resolution
+frames
+steps
+pipeline reused true/false
+model offload
+VRAM before/after cleanup
+text encoder / VAE device
+```
+
+A render like:
+
+```text
+704x1280 + 121 frames
+```
+
+is much heavier than:
+
+```text
+352x640 + 49 frames
+```
+
+### Turbo output has color flashes
+
+Use Turbo presets:
+
+```text
+CFG 1.0
+steps 4-6
+Euler / Simple
+I2V shift 5.0
+```
+
+### AI Prompt Assistant issues
+
+If **Test connection** or **Generate prompts** fails:
+
+```text
+Provider is not reachable   -> check Base URL and that the local server (Ollama /
+                               LM Studio) is running, or the model name is pulled.
+API key is missing          -> set the key for OpenAI / Anthropic / DeepSeek.
+WAN render is running        -> local AI is blocked during render by default; wait,
+                               or enable "Allow local AI during render" in Settings.
+```
+
+A message like *"Prompt generated — AI resource cleanup reported a warning"* is **not** a failure: the prompts/sequence are kept, and only the local-LLM release step reported an issue. Rendering is unaffected.
+
+### Video controls look clipped
+
+Check CSS for the preview video:
+
+```css
+.preview-video-shell {
+  overflow: visible;
+}
+
+.preview-video {
+  height: auto;
+  object-fit: contain;
+}
+```
+
+---
+
+## Failure behavior — no fake output, ever
+
+If a model component is missing, a dependency is not installed, CUDA is unavailable, resolution/frame count is invalid, inference fails, encoding fails, ffmpeg fails or an asset is missing, the job must fail clearly.
+
+No placeholder video.
+No fake preview.
+No success metadata for failed jobs.
+
+---
+
+## Warning
+
+Warning: this project is provided as is, without any warranty regarding functionality, stability, compatibility, or safety on your system.
+
+I do not accept any responsibility, in any way, for any damage, malfunction, instability, data loss, crashes, overheating, melting, or even partial failure of GPUs, CPUs, power supplies, motherboards, drives, RAM, or any other hardware component, past, present, or future.
+
+Installation, configuration, and execution of this project are entirely at your own risk and under your full responsibility.
+
+Use it as you see fit, according to your technical skills and the limits of your hardware.
+
+By downloading, installing, or running this project, you declare that you have read, understood, and fully accepted this disclaimer.
+
+---
+
+## Credits
+
+```text
+RadicaLab
+Current video module: Radica - WanVideoGenerator / Video Studio
+Concept & Design: Fabrizio Radica
+Project by RadicaDesign
+```
+
+## Please Donate
+https://www.paypal.com/donate/?hosted_button_id=TTBHUJ7CFE78N
+
+Current Video Studio backend built on the shoulders of [Wan 2.2](https://github.com/Wan-Video/Wan2.2), [Hugging Face diffusers](https://github.com/huggingface/diffusers), FastAPI, PyTorch and ffmpeg.
